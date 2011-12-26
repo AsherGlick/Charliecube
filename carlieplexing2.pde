@@ -18,6 +18,7 @@ void loop() {
   tunnel();
   chaseTheDot();
   planarFlop();
+  
 }
 
 /********************************* PLANAR SPIN ********************************\
@@ -63,6 +64,7 @@ void fountian() {
     }
   }
 }
+
 /********************************** TRI-FADE **********************************\
 | This animation fades through the red green and blue colors of the leds       |
 | creating different mixtures of each of the colors.                           |
@@ -102,11 +104,39 @@ void trifade() {
 
 /******************************** SHIFT SQUARES *******************************\
 |
+
+-1 0 1 2
+
+((bluex+3)%6)-2
+
+
 \******************************************************************************/
 void shiftSquares() {
   continuePattern = true;
-  while (continuePattern) {
-    
+  int animationSpeed = 10;
+  
+  int bluex = 0;
+  int bluey = 0;
+  int bluez = 0;
+  
+  int redx = 0;
+  int redy = 0;
+  int redz = 0;
+  
+  int greenx = 0;
+  int greeny = 0;
+  int greenz = 0;
+  
+  while(continuePattern) {
+    switch (random(0,9)) {
+      case 0:
+        bluex = bluex^0x01;
+      case 1:
+        //bluey
+      case 2:
+        //bluez
+    }
+    drawBox(blue,bluex*2,bluey*2,bluez*2,bluex*2+1,bluey*2+1,bluez*2);
   }
 }
 /*********************************** TUNNEL ***********************************\
