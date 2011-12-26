@@ -134,7 +134,8 @@ void shiftSquares() {
       case 1:
         //bluey
       case 2:
-        //bluez
+        bluez=bluez;
+        
     }
     drawBox(blue,bluex*2,bluey*2,bluez*2,bluex*2+1,bluey*2+1,bluez*2);
   }
