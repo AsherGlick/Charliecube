@@ -10,14 +10,13 @@ void setup() {
   animationMax = 10;
 }
 void loop() {
-  // animations to display \\ 
   planarSpin();
   fountian();
   trifade();
   shiftSquares();
   tunnel();
   chaseTheDot();
-  planarFlop();
+  planarFlop3D();
   
 }
 
@@ -29,13 +28,32 @@ void loop() {
 \******************************************************************************/
 void planarSpin() {
   continuePattern = true;
+  int animationSpeed = 50;
+  int spinsPerColor = 5; // a spin is actually half a revolution
   while (continuePattern) {
-    for (int x = 0; x < 3; x++) {
-      drawLine(color,x,0,0,3-x,3,0); // TODO repeat z
+    int x = 0;
+    int y = 0;
+    for (int i = 0; i < spinsPerColor; i++) {
+      for (int x = 0; x < 3; x++) {
+        drawLine(color,x,0,0,3-x,3,0);
+        drawLine(color,x,0,1,3-x,3,1);
+        drawLine(color,x,0,2,3-x,3,2);
+        drawLine(color,x,0,3,3-x,3,3);
+        flushBuffer();
+        clearBuffer();
+        delay(animationSpeed);
+      }
+      for (int y = 0; y < 3; y++) {
+        drawLine(color,3,y,0,0,3-y,0);
+        drawLine(color,3,y,1,0,3-y,1);
+        drawLine(color,3,y,2,0,3-y,2);
+        drawLine(color,3,y,3,0,3-y,3);
+        flushBuffer();
+        clearBuffer();
+        delay(animationSpeed);
+      }
     }
-    for (int y = 0; y < 3; y++) {
-      drawLine(color,3,y,0,0,3-y,0); // TODO repeat z
-    }
+    color = nextColor(color);
   }
 }
 
@@ -48,7 +66,7 @@ void planarSpin() {
 \******************************************************************************/
 void fountian() {
   continuePattern = true;
-  int animationSpeed = 10;
+  int animationSpeed = 100;
   while (continuePattern) {
     for (int z = 0; z <= 3; z++) {
       drawBoxWalls(color,1,1,z,2,2,z);
@@ -62,6 +80,7 @@ void fountian() {
       clearBuffer();
       delay(animationSpeed);
     }
+    color=nextColor(color);
   }
 }
 
@@ -73,7 +92,7 @@ void fountian() {
 \******************************************************************************/
 void trifade() {
   continuePattern = true;
-  int animationSpeed = 10;
+  int animationSpeed = 100;
   while (continuePattern) {
     // blue fade out, red fade in
     for (int i = 1; i <= 8; i++) {
@@ -103,49 +122,102 @@ void trifade() {
 }
 
 /******************************** SHIFT SQUARES *******************************\
-|
-
--1 0 1 2
-
-((bluex+3)%6)-2
-
-
+| Three 2x2x2 squares start on the cube each a red green or blue. then they    |
+| randomly move around the cube one at a time, if they crash into each other   |
+| then then both leds turn on and while they occupy the same space they apear  |
+| a different color                                                            |
+|                                                                              |
+| Written By: Asher Glick                                                      |
 \******************************************************************************/
 void shiftSquares() {
+  int animationSpeed = 100;
+  
+  int blx = 2; // blue x
+  int bly = 0; // blue y
+  int blz = 0; // blue z
+  
+  int rdx = 0; // red x
+  int rdy = 2; // red y
+  int rdz = 0; // red z
+  
+  int gnx = 0; // green x
+  int gny = 0; // green y
+  int gnz = 2; // green z
+  
+  int * mover = &blx;
   continuePattern = true;
-  int animationSpeed = 10;
-  
-  int bluex = 0;
-  int bluey = 0;
-  int bluez = 0;
-  
-  int redx = 0;
-  int redy = 0;
-  int redz = 0;
-  
-  int greenx = 0;
-  int greeny = 0;
-  int greenz = 0;
   
   while(continuePattern) {
     switch (random(0,9)) {
-      case 0:
-        bluex = bluex^0x01;
-      case 1:
-        //bluey
-      case 2:
-        bluez=bluez;
-        
+      case 0: mover = &blx; break;
+      case 1: mover = &bly; break;
+      case 2: mover = &blz; break;
+      case 3: mover = &rdx; break;
+      case 4: mover = &rdy; break;
+      case 5: mover = &rdz; break;
+      case 6: mover = &gnx; break;
+      case 7: mover = &gny; break;
+      case 8: mover = &gnz; break;
     }
-    drawBox(blue,bluex*2,bluey*2,bluez*2,bluex*2+1,bluey*2+1,bluez*2);
+    *mover = (((*mover)+2)%4)-1;
+    drawBox(blue ,abs(blx),abs(bly),abs(blz),abs(blx)+1,abs(bly)+1,abs(blz)+1);
+    drawBox(red  ,abs(gnx),abs(gny),abs(gnz),abs(gnx)+1,abs(gny)+1,abs(gnz)+1);
+    drawBox(green,abs(rdx),abs(rdy),abs(rdz),abs(rdx)+1,abs(rdy)+1,abs(rdz)+1);
+    flushBuffer();
+    clearBuffer();
+    delay(animationSpeed);
+    *mover = (((*mover)+2)%4)-1;
+    drawBox(blue ,abs(blx),abs(bly),abs(blz),abs(blx)+1,abs(bly)+1,abs(blz)+1);
+    drawBox(red  ,abs(gnx),abs(gny),abs(gnz),abs(gnx)+1,abs(gny)+1,abs(gnz)+1);
+    drawBox(green,abs(rdx),abs(rdy),abs(rdz),abs(rdx)+1,abs(rdy)+1,abs(rdz)+1);
+    flushBuffer();
+    clearBuffer();
+    delay(animationSpeed*2);
   }
 }
+
 /*********************************** TUNNEL ***********************************\
 |
 \******************************************************************************/
 void tunnel() {
   continuePattern = true;
+  int animationSpeed =100;
+  
+  int color1[]  = {R,R,R,R,B,B,B,B};
+  int bright1[] = {2,4,6,8,2,4,6,8};
+  int color2[]  = {B,B,B,B,R,R,R,R};
+//int bright2[] = {6,4,2,0,6,4,2,0};
+  int bright2[] = {8,6,4,2,8,6,4,2};
+  
+  int index[]   = {0,1,2,3,4,5,6,7};
+  
   while (continuePattern) {
+    drawBoxWalls(color1[index[0]],bright1[index[0]],1,1,0,2,2,0);
+    drawBoxWalls(color2[index[0]],bright2[index[0]],1,1,0,2,2,0);
+    drawBoxWalls(color1[index[1]],bright1[index[1]],1,1,1,2,2,1);
+    drawBoxWalls(color2[index[1]],bright2[index[1]],1,1,1,2,2,1);
+    drawBoxWalls(color1[index[2]],bright1[index[2]],1,1,2,2,2,2);
+    drawBoxWalls(color2[index[2]],bright2[index[2]],1,1,2,2,2,2);
+    drawBoxWalls(color1[index[3]],bright1[index[3]],1,1,3,2,2,3);
+    drawBoxWalls(color2[index[3]],bright2[index[3]],1,1,3,2,2,3);
+    
+    drawBoxWalls(color1[index[4]],bright1[index[4]],0,0,3,3,3,3);
+    drawBoxWalls(color2[index[4]],bright2[index[4]],0,0,3,3,3,3);
+    drawBoxWalls(color1[index[5]],bright1[index[5]],0,0,2,3,3,2);
+    drawBoxWalls(color2[index[5]],bright2[index[5]],0,0,2,3,3,2);
+    drawBoxWalls(color1[index[6]],bright1[index[6]],0,0,1,3,3,1);
+    drawBoxWalls(color2[index[6]],bright2[index[6]],0,0,1,3,3,1);
+    drawBoxWalls(color1[index[7]],bright1[index[7]],0,0,0,3,3,0);
+    drawBoxWalls(color2[index[7]],bright2[index[7]],0,0,0,3,3,0);
+    
+    
+    flushBuffer();
+    clearBuffer();
+    for (int i = 0; i < 8; i++){
+      //index[i] = index[i]==7?0:index[i]+1;
+      index[i] = (index[i]+1)%8;
+    }
+    delay(animationSpeed);
     
   }
 }
@@ -158,7 +230,7 @@ void tunnel() {
 \******************************************************************************/
 void chaseTheDot() {
   continuePattern = true;
-  int animationSpeed = 10;
+  int animationSpeed = 100;
   
   int xpos = 0;
   int ypos = 0;
@@ -183,12 +255,12 @@ void chaseTheDot() {
         ypos--; break;
       
       case 4:
-        if (ypos > 0) {ypos--;break;}
+        if (zpos > 0) {zpos--;break;}
         else color=nextColor(color);
       case 5:
-        if (ypos < 3) {ypos++;break;}
+        if (zpos < 3) {zpos++;break;}
         else color=nextColor(color);
-        ypos--; break;
+        zpos--; break;
     }
     drawLed(color,xpos,ypos,zpos);
     flushBuffer();
@@ -197,11 +269,95 @@ void chaseTheDot() {
   }
 }
 /********************************* PLANAR FLOP ********************************\
-|
+| 
 \******************************************************************************/
-void planarFlop() {
+/******************************* PLANAR FLOP 3D *******************************\
+| Version 2 of the planar flop, doing more complicated maths and 3D vectors    |
+| 'n stuff. Making this function found the bug of reversed z axis line drawing |
+\******************************************************************************/
+void planarFlop3D() {
   continuePattern = true;
+  int animationSpeed = 50;
   while (continuePattern) {
     
+    for (int y = 3; y>0; y--){
+      for (int z = 0; z < 4; z++) drawLine(color,0,3,z,3,y,z);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    }
+    for (int x = 3; x > 0; x--) {
+      for (int z = 0; z < 4; z++) drawLine(color,0,3,z,x,0,z);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    }
+    
+    
+    for (int x = 0; x < 3; x++) {
+      for (int y = 0; y < 4; y++) drawLine(color,0,y,0,x,y,3);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    }
+    for (int z = 3; z > 0; z--) {
+      for (int y = 0; y < 4; y++) drawLine(color,0,y,0,3,y,z);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    }
+    
+    for (int z = 0; z < 3; z++) {
+      for (int x = 0; x < 4; x++) drawLine(color,x,0,0,x,3,z);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    }
+    for (int y = 3; y > 0; y--) {
+      for (int x = 0; x < 4; x++) drawLine(color,x,0,0,x,y,3);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    }
+    
+    for (int y = 0; y < 3; y++) {
+      for (int z = 0; z < 4; z++) drawLine(color,3,0,z,0,y,z);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    }
+    for (int x = 0; x < 3; x++) {
+      for (int z = 0; z < 4; z++) drawLine(color,3,0,z,x,3,z);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    }
+    
+    for (int x = 3; x > 0; x--) {
+      for (int y = 0; y < 4; y++) drawLine(color,3,y,3,x,y,0);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    }
+    for (int z = 0; z < 3; z++) {
+      for (int y = 0; y < 4; y++) drawLine(color,3,y,3,0,y,z);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    }
+    
+    for (int z = 3; z > 0; z--) {
+      for (int x = 0; x < 4; x++) drawLine(color,x,3,3,x,0,z);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    } 
+    for (int y = 0; y < 3; y++) {
+      for (int x = 0; x < 4; x++) drawLine(color,x,3,3,x,y,0);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    }
+    color = nextColor(color);
   }
 }

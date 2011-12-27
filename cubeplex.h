@@ -185,7 +185,7 @@ void drawBox(int color, int brightness, int startx, int starty, int startz, int 
   }
 }
 void drawBox(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-  drawBox(color,255,startx,starty,startz,endx,endy,endz);
+  drawBox(color,8,startx,starty,startz,endx,endy,endz);
 }
 /******************************* DRAW HOLLOW BOX ******************************\
 | This function will draw the walls and celing of a defined box                |
@@ -293,11 +293,11 @@ void drawLine(int color, int brightness, int startx, int starty, int startz, int
   
   if (reverseX) swapint(startx,endx);
   if (reverseY) swapint(starty,endy);
-  if (reverseZ) swapint(startx,endz);
+  if (reverseZ) swapint(startz,endz);
   drawLed(color,brightness,endx,endy,endz);
 }
 void drawLine(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-  drawLine(color,255,startx, starty, startz, endx, endy, endz);
+  drawLine(color,8,startx, starty, startz, endx, endy, endz);
 }
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////////// DISPLAY //////////////////////////////////
