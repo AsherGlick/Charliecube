@@ -188,7 +188,7 @@ void drawBox(int color, int startx, int starty, int startz, int endx, int endy, 
   drawBox(color,8,startx,starty,startz,endx,endy,endz);
 }
 /******************************* DRAW HOLLOW BOX ******************************\
-| This function will draw the walls and celing of a defined box                |
+| This function will draw the walls, celing, and floor of a defined box        |
 \******************************************************************************/
 void drawHollowBox(int color, int brightness, int startx, int starty, int startz, int endx, int endy, int endz) {
   if (startx > endx) swapint(startx,endx);
@@ -210,7 +210,7 @@ void drawHollowBox(int color, int startx, int starty, int startz, int endx, int 
    drawHollowBox(color,255,startx,starty,startz,endx,endy,endz);
 }
 /****************************** DRAW BOX OUTLINE ******************************\
-| This function will draw the walls and celing of a defined box                |
+| This function will draw edges of a defined box but none of the planes        |
 \******************************************************************************/
 void drawBoxOutline(int color, int brightness, int startx, int starty, int startz, int endx, int endy, int endz) {
   if (startx > endx) swapint(startx,endx);
