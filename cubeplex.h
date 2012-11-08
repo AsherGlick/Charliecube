@@ -132,7 +132,7 @@ int roundClostest(int numerator, int denominator) {
 #define Y 4
 #define P 5
 #define W 6
-#define O 7
+#define O -7
 
 #define blue 0
 #define green 1
