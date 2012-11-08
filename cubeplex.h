@@ -28,7 +28,8 @@
 
 // number of LEDs
 #define BUFFERSIZE 192
-#include "WProgram.h"
+
+#include "Arduino.h" //#include "WProgram.h"
 #include "mappings.h"
 #include "niceTimer.h"
 
