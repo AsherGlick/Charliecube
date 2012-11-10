@@ -76,7 +76,8 @@
 
 /* LED group mappings
  *
- * This defines which group to turn on for each LED. The first group specifies the cathode, the second the anode.
+ * This defines which group to turn on for each LED. The first group specifies the anode (+5V),
+ * the second the cathode (GND).
  * The pins are named based on color, x, y, z.
  */
 #define b111 4,8

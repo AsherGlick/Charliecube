@@ -37,21 +37,22 @@
 struct _frame_light{
   char pin1;
   char pin2;
+  char brightness; // brightnesses are relative to PWMMMAX (currently 8)
   struct _frame_light * next;
 };
 
-// Beginning of linked list of all LEDs
+// Beginning of linked list of all lit LEDs
 _frame_light * _cube__frame;
 // Currently lit LED
 _frame_light * _cube_current_frame;
-// array with state of each LED
+// array with brightness of each LED
 char * _cube_buffer;
 
 bool continuePattern = false;
 
 /********************************** INIT CUBE *********************************\
 | This function will allocate the memory required for the LED cube buffers.    |
-| which is about 600bytes
+| which is 1157 bytes
 \******************************************************************************/
 void initCube() {
   _cube__frame = (_frame_light*)malloc(sizeof(_frame_light) * (BUFFERSIZE+1));
@@ -151,9 +152,7 @@ int roundClostest(int numerator, int denominator) {
 void drawLed(int color, int brightness, int x, int y, int z) {
   
   if ((color/3)==0) { // single color (red green blue)
-  //_cube_buffer[(((color)%3)*64)+(x*16)+(y*4)+z] += brightness;
     _cube_buffer[(((color)%3)*64)+(x*16)+(y*4)+z] += brightness;
-    _cube_buffer[(((color+1)%3)*64)+(x*16)+(y*4)+z] += 0;
   }
   else if ((color/3)==1) { // double color (teal yellow purple)
     _cube_buffer[(((color)%3)*64)+(x*16)+(y*4)+z] += brightness;
@@ -308,16 +307,30 @@ void drawLine(int color, int startx, int starty, int startz, int endx, int endy,
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////////// DISPLAY //////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-int pwmm = 0;
-int display_length;
+int pwmm = 0; //incremented each loop through display list 
+int display_length; //number of lit LEDs
+/* Populates the specified _frame_light
+ *
+ * copy_frame should specify the most recently allocated frame in _cube__frame.
+ * The next frame is added to the linked list, overwritten with the correct info,
+ * and then copy_frame updated.
+ *
+ * pin1 and pin2 refer to the logical groups (eg 1-16). The mapping of these to
+ * actual Arduino pins is specified by the PXX macros in mappings.h
+ *
+ * brightness should be from 0-255
+ *
+ * Side effects: updates display_length
+ */
 void flushElement(_frame_light* &copy_frame,int pin1,int pin2,int brightness) {
   pin1--;
   pin2--;
   
   (copy_frame+1)->next=copy_frame;
   copy_frame++;
-  copy_frame->pin1=pin1 | ( brightness & 0xF0);
-  copy_frame->pin2=pin2 | ((brightness & 0x0F) << 4);
+  copy_frame->pin1=pin1;
+  copy_frame->pin2=pin2;
+  copy_frame->brightness=brightness;
   display_length++;
 }
 /******************************** FLUSH BUFFER ********************************\
@@ -332,6 +345,7 @@ void flushBuffer() {
   _frame_light * copy_frame = _cube__frame;
   display_length = 0;
   
+  // copy lit LEDs (those with _cube_buffer[i]>0 into the circularly linked list
   int i=0;  
   // Do some macro manipulation to build up flushElement calls for all LEDs
   // Expands to 192 lines of the FLUSH_ELEM macro, with the pins replaced by the mappings in mappins.h:
@@ -348,6 +362,7 @@ void flushBuffer() {
 #undef PINS_Z
 #undef FLUSH_ELEM
   
+  // circularly link the list
   (_cube__frame+1)->next=copy_frame;
   _cube_current_frame=_cube__frame+1;
 }
@@ -367,20 +382,22 @@ byte pinsD[] = {P1D,P2D,P3D,P4D,P5D,P6D,P7D,P8D,P9D,P10D,P11D,P12D,P13D,P14D,P15
 #define HALF PWMMMAX/2
 // the interrupt function to display the leds
 ISR(TIMER2_OVF_vect) {
+  // fetch logical group for current LED
   int pin1 = _cube_current_frame->pin1;
   int pin2 = _cube_current_frame->pin2;
-  int count = (pin1 & 0xF0) | ((pin2 & 0xF0)>>4);
-  pin1 = pin1&0x0F;
-  pin2 = pin2&0x0F;
+  int count = _cube_current_frame->brightness;
+
+  // All LEDs off
   PORTB = 0x00;
   PORTC = 0x00;
   PORTD = 0x00;
+  // Turn LED on for first count iterations through list
   if (count > pwmm){
-  
+    // set currently lit pins as outputs, all others as high impetance
     DDRB = pinsB[pin1] | pinsB[pin2];
     DDRC = pinsC[pin1] | pinsC[pin2];
     DDRD = pinsD[pin1] | pinsD[pin2];
-  
+    // drive pin1 high and pin2 low
     PORTB = pinsB[pin1];
     PORTC = pinsC[pin1];
     PORTD = pinsD[pin1];
@@ -388,7 +405,7 @@ ISR(TIMER2_OVF_vect) {
   }
   _cube_current_frame = _cube_current_frame->next;
   if (_cube_current_frame == _cube__frame+1){
-    pwmm = (pwmm+1); //%PWMMMAX; // oooook so the modulus function is just a tincy bit toooooo slow when only one led is on
+    pwmm++;// = (pwmm+1)%PWMMMAX; // oooook so the modulus function is just a tincy bit toooooo slow when only one led is on
     if (pwmm == PWMMMAX) pwmm = 0; // by too slow i mean "to slow for the program to process an update" here is the fix
   }
 }
@@ -405,7 +422,7 @@ ISR(TIMER2_OVF_vect) {
 \******************************************************************************/
 int animationTimer = 0;
 int animationMax = 0;
-
+// set the interupt function to signal when the pattern is finished
 ISR(TIMER1_OVF_vect) {
   animationTimer++;
   if (animationTimer == animationMax) {
