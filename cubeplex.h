@@ -350,10 +350,10 @@ void flushBuffer() {
   // Do some macro manipulation to build up flushElement calls for all LEDs
   // Expands to 192 lines of the FLUSH_ELEM macro, with the pins replaced by the mappings in mappins.h:
   // b111,b112,b113,b114,b121,b122,...,g111,...,r444
-#define FLUSH_ELEM(pins) if(_cube_buffer[ i ] != 0) flushElement(copy_frame, pins ,_cube_buffer[ i ]); i++
-#define PINS_Z(cxy) FLUSH_ELEM( cxy##1 ); FLUSH_ELEM( cxy##2 ); FLUSH_ELEM( cxy##3 ); FLUSH_ELEM( cxy##4 )
-#define PINS_Y(cx) PINS_Z(cx##1); PINS_Z(cx##2); PINS_Z(cx##3); PINS_Z(cx##4)
-#define PINS_X(c) PINS_Y(c##1); PINS_Y(c##2); PINS_Y(c##3); PINS_Y(c##4);
+#define FLUSH_ELEM(c,x,y,z) if(_cube_buffer[ i ] != 0) flushElement(copy_frame, PINS(c,x,y,z) ,_cube_buffer[ i ]); i++
+#define PINS_Z(c,x,y) FLUSH_ELEM( c,x,y,1 ); FLUSH_ELEM( c,x,y,2 ); FLUSH_ELEM( c,x,y,3 ); FLUSH_ELEM( c,x,y,4 )
+#define PINS_Y(c,x) PINS_Z(c,x,1); PINS_Z(c,x,2); PINS_Z(c,x,3); PINS_Z(c,x,4)
+#define PINS_X(c) PINS_Y(c,1); PINS_Y(c,2); PINS_Y(c,3); PINS_Y(c,4);
 
   PINS_X(b); PINS_X(g); PINS_X(r);
 

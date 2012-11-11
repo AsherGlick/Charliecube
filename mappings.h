@@ -80,6 +80,8 @@
  * the second the cathode (GND).
  * The pins are named based on color, x, y, z.
  */
+/*
+//System 1: Manually define pins for all 192 LEDs
 #define b111 4,8
 #define b112 16,4
 #define b113 12,16
@@ -273,5 +275,36 @@
 #define r443 1,15
 #define r444 15,12
 
+#define PINS(c,x,y,z) c##x##y##z
+*/
+//System 2: Build up pins from complicated macros.
+//Quicker to modify, but harder to understand
+#define PINS(c,x,y,z) _PIN_##x##y(c,x,y,z)
+
+#define _PIN_11(c,x,y,z) _SPIRE(c,z, 4, 8,12,16)
+#define _PIN_12(c,x,y,z) _SPIRE(c,z, 4, 7,11,13)
+#define _PIN_13(c,x,y,z) _SPIRE(c,z, 4, 6,10,15)
+#define _PIN_14(c,x,y,z) _SPIRE(c,z, 4, 5, 9,14)
+#define _PIN_21(c,x,y,z) _SPIRE(c,z, 3, 8,11,15)
+#define _PIN_22(c,x,y,z) _SPIRE(c,z, 3, 7,12,14)
+#define _PIN_23(c,x,y,z) _SPIRE(c,z, 3, 6, 9,16)
+#define _PIN_24(c,x,y,z) _SPIRE(c,z, 3, 5,10,13)
+#define _PIN_31(c,x,y,z) _SPIRE(c,z, 2, 8,10,14)
+#define _PIN_32(c,x,y,z) _SPIRE(c,z, 2, 7, 9,15)
+#define _PIN_33(c,x,y,z) _SPIRE(c,z, 2, 6,12,13)
+#define _PIN_34(c,x,y,z) _SPIRE(c,z, 2, 5,11,16)
+#define _PIN_41(c,x,y,z) _SPIRE(c,z, 1, 8, 9,13)
+#define _PIN_42(c,x,y,z) _SPIRE(c,z, 1, 7,10,16)
+#define _PIN_43(c,x,y,z) _SPIRE(c,z, 1, 6,11,14)
+#define _PIN_44(c,x,y,z) _SPIRE(c,z, 1, 5,12,15)
+
+#define _SPIRE(c,z,bcrg,crgb,rgbc,gbcr) _SPIRE_##z(c,bcrg,crgb,rgbc,gbcr)
+#define _SPIRE_1(c,bcrg,crgb,rgbc,gbcr) _SPIRE_##c(rgbc,gbcr,bcrg),crgb
+#define _SPIRE_2(c,bcrg,crgb,rgbc,gbcr) _SPIRE_##c(crgb,rgbc,gbcr),bcrg
+#define _SPIRE_3(c,bcrg,crgb,rgbc,gbcr) _SPIRE_##c(bcrg,crgb,rgbc),gbcr
+#define _SPIRE_4(c,bcrg,crgb,rgbc,gbcr) _SPIRE_##c(gbcr,bcrg,crgb),rgbc
+#define _SPIRE_r(r,g,b) r
+#define _SPIRE_g(r,g,b) g
+#define _SPIRE_b(r,g,b) b
 
 #endif
