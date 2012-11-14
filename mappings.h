@@ -49,7 +49,7 @@
 #define _MAPPINGS_H_
 
 /****************************** PIN PORT MAPPINGS *****************************\
-| There are 16 logical groups for controlling the LEDs. This defines which     |
+| There are 16 wires for controlling the LEDs. This defines which              |
 | physical pin coresponds to each. For example, to use analogue pin 2 (PORTC   |
 | bit 3) for group 15, we set P13C=0x04 and P13B=P13D=0;                       |
 |                                                                              |
@@ -121,9 +121,10 @@
 
 
 
-/* LED group mappings
+/* LED to wire mappings
  *
- * This defines which group to turn on for each LED. The first group specifies the anode (+5V),
+ * This defines which wire to turn on for each LED. The first group specifies
+ *   the anode (+5V),
  * the second the cathode (GND).
  * The pins are named based on color, x, y, z.
  */
@@ -322,28 +323,28 @@
 #define r443 1,15
 #define r444 15,12
 
-#define PINS(c,x,y,z) c##x##y##z
+#define WIRES(c,x,y,z) c##x##y##z
 */
 //System 2: Build up pins from complicated macros.
 //Quicker to modify, but harder to understand
-#define PINS(c,x,y,z) _PIN_##x##y(c,x,y,z)
+#define WIRES(c,x,y,z) _WIRES_##x##y(c,x,y,z)
 
-#define _PIN_11(c,x,y,z) _SPIRE(c,z, 4, 8,12,16)
-#define _PIN_12(c,x,y,z) _SPIRE(c,z, 4, 7,11,13)
-#define _PIN_13(c,x,y,z) _SPIRE(c,z, 4, 6,10,15)
-#define _PIN_14(c,x,y,z) _SPIRE(c,z, 4, 5, 9,14)
-#define _PIN_21(c,x,y,z) _SPIRE(c,z, 3, 8,11,15)
-#define _PIN_22(c,x,y,z) _SPIRE(c,z, 3, 7,12,14)
-#define _PIN_23(c,x,y,z) _SPIRE(c,z, 3, 6, 9,16)
-#define _PIN_24(c,x,y,z) _SPIRE(c,z, 3, 5,10,13)
-#define _PIN_31(c,x,y,z) _SPIRE(c,z, 2, 8,10,14)
-#define _PIN_32(c,x,y,z) _SPIRE(c,z, 2, 7, 9,15)
-#define _PIN_33(c,x,y,z) _SPIRE(c,z, 2, 6,12,13)
-#define _PIN_34(c,x,y,z) _SPIRE(c,z, 2, 5,11,16)
-#define _PIN_41(c,x,y,z) _SPIRE(c,z, 1, 8, 9,13)
-#define _PIN_42(c,x,y,z) _SPIRE(c,z, 1, 7,10,16)
-#define _PIN_43(c,x,y,z) _SPIRE(c,z, 1, 6,11,14)
-#define _PIN_44(c,x,y,z) _SPIRE(c,z, 1, 5,12,15)
+#define _WIRES_11(c,x,y,z) _SPIRE(c,z, 4, 8,12,16)
+#define _WIRES_12(c,x,y,z) _SPIRE(c,z, 4, 7,11,13)
+#define _WIRES_13(c,x,y,z) _SPIRE(c,z, 4, 6,10,15)
+#define _WIRES_14(c,x,y,z) _SPIRE(c,z, 4, 5, 9,14)
+#define _WIRES_21(c,x,y,z) _SPIRE(c,z, 3, 8,11,15)
+#define _WIRES_22(c,x,y,z) _SPIRE(c,z, 3, 7,12,14)
+#define _WIRES_23(c,x,y,z) _SPIRE(c,z, 3, 6, 9,16)
+#define _WIRES_24(c,x,y,z) _SPIRE(c,z, 3, 5,10,13)
+#define _WIRES_31(c,x,y,z) _SPIRE(c,z, 2, 8,10,14)
+#define _WIRES_32(c,x,y,z) _SPIRE(c,z, 2, 7, 9,15)
+#define _WIRES_33(c,x,y,z) _SPIRE(c,z, 2, 6,12,13)
+#define _WIRES_34(c,x,y,z) _SPIRE(c,z, 2, 5,11,16)
+#define _WIRES_41(c,x,y,z) _SPIRE(c,z, 1, 8, 9,13)
+#define _WIRES_42(c,x,y,z) _SPIRE(c,z, 1, 7,10,16)
+#define _WIRES_43(c,x,y,z) _SPIRE(c,z, 1, 6,11,14)
+#define _WIRES_44(c,x,y,z) _SPIRE(c,z, 1, 5,12,15)
 
 #define _SPIRE(c,z,bcrg,crgb,rgbc,gbcr) _SPIRE_##z(c,bcrg,crgb,rgbc,gbcr)
 #define _SPIRE_1(c,bcrg,crgb,rgbc,gbcr) _SPIRE_##c(rgbc,gbcr,bcrg),crgb
