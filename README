@@ -1,0 +1,59 @@
+CharlieCube
+By Asher Glick
+
+==INTRODUCTION==
+
+This library is able to drive a 4x4x4 RGB cube from an Arduino microcontroller.
+
+The construction of the cube involves charlieplexing the 192 LEDs (4x4x4x3) and
+uses 16 pins. The construction is rather complex. Details are available at
+http://aglick.com/charliecube.html
+
+All code is released under the BSD license (see file LICENSE for details).
+
+==PIN MAPPINGS==
+
+The code should function without modification if the hardware is constructed as
+described in the tutorial. However, the pin mappings can be easily modified in
+mappings.h to accomidate changes in hardware layout.
+
+Two types of mappings are required. First, physical pins are mapped to the 16
+wires set up in the hardware. For example, wires 1-4 define the 4 rows of LEDs.
+Each wire is specified by 3 macros, eg PxxB PxxC PxxD, which give the settings
+for the PORTB/C/D registers (see
+http://www.arduino.cc/en/Reference/PortManipulation for info on PORT
+registers). For example, pin 2 of the arduino is the third bit of PORTD, so to
+use pin 2 for wire 1 would use the following definitions in mappings.h:
+
+    #define P1B 0x00
+    #define P1C 0x00
+    #define P1D 0x04 //2
+
+Second, the wires must be mapped to individual LEDs. This is done through the WIRES
+macro, which returns the anode wire and the cathod wire for a given LED. The easiest
+way to change these mappings is to change the b111 to r444 macros ("System 1"). Each
+macro is named based on the color (b/g/r) and x, y, and z coordinates (1-4). For example, the following line defines the blue LED at the origin to light up when the 4th pin is driven HIGH and the 8th pin is driven LOW:
+
+    #define b111 4,8
+
+The downside to this system is that all 192 LEDs must be manually defined. If
+you're comfortable with macros, "System 2" allows LED-wire mappings to be
+changed more easily in the case where all spires are wired identically.
+
+==Memory==
+
+The compiled sketch takes 21,876 bytes on an Arduino Uno. Much of the code size
+is contributed by the specific patterns displayed. Omitting some of the example
+patterns can reduce the code size by 4-5K.
+
+The cubeplex library allocates two buffers for storing LED state. These should
+require about 1157 bytes of SRAM, plus string literals, etc. Tests show the
+current version leaves about 600 bytes free.
+
+==Credits==
+
+Original Code by Asher Glick.
+
+Wire to LED mapping by Spencer Bliven.
+
+
