@@ -1,0 +1,180 @@
+#######################################
+# Syntax Coloring Map For cubeplex
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+_frame_light	 KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+initCube	KEYWORD2
+clearBuffer	KEYWORD2
+nextPrimaryColor	KEYWORD2
+nextSecondaryColor	KEYWORD2
+nextColor	KEYWORD2
+swapint	KEYWORD2
+drawLed	KEYWORD2
+roundClostest	KEYWORD2
+drawLed	KEYWORD2
+drawBox	KEYWORD2
+drawHollowBox	KEYWORD2
+drawBoxOutline	KEYWORD2
+drawBoxWalls	KEYWORD2
+flushBuffer	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+continuePattern	LITERAL2
+animationTimer	LITERAL2
+animationMax	LITERAL2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+P1B	LITERAL1
+P1C	LITERAL1
+P1D	LITERAL1
+P2B	LITERAL1
+P2C	LITERAL1
+P2D	LITERAL1
+P3B	LITERAL1
+P3C	LITERAL1
+P3D	LITERAL1
+P4B	LITERAL1
+P4C	LITERAL1
+P4D	LITERAL1
+P5B	LITERAL1
+P5C	LITERAL1
+P5D	LITERAL1
+P6B	LITERAL1
+P6C	LITERAL1
+P6D	LITERAL1
+P7B	LITERAL1
+P7C	LITERAL1
+P7D	LITERAL1
+P8B	LITERAL1
+P8C	LITERAL1
+P8D	LITERAL1
+P9B	LITERAL1
+P9C	LITERAL1
+P9D	LITERAL1
+P10B	LITERAL1
+P10C	LITERAL1
+P10D	LITERAL1
+P11B	LITERAL1
+P11C	LITERAL1
+P11D	LITERAL1
+P12B	LITERAL1
+P12C	LITERAL1
+P12D	LITERAL1
+P13B	LITERAL1
+P13C	LITERAL1
+P13D	LITERAL1
+P14B	LITERAL1
+P14C	LITERAL1
+P14D	LITERAL1
+P15B	LITERAL1
+P15C	LITERAL1
+P15D	LITERAL1
+P16B	LITERAL1
+P16C	LITERAL1
+P16D	LITERAL1
+
+WIRES	LITERAL1
+BUFFERSIZE	LITERAL1
+
+B	LITERAL1
+G	LITERAL1
+R	LITERAL1
+T	LITERAL1
+Y	LITERAL1
+P	LITERAL1
+W	LITERAL1
+O	LITERAL1
+
+blue	LITERAL1
+green	LITERAL1
+red	LITERAL1
+teal	LITERAL1
+yellow	LITERAL1
+purple	LITERAL1
+white	LITERAL1
+off	LITERAL1
+
+#######################################
+# Syntax Coloring Map For nicetimer
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setTimer0Mode	KEYWORD2
+setTimer0Prescaler	KEYWORD2
+setTimer0Value	KEYWORD2
+getTimer0Value	KEYWORD2
+setTimer0OutputCompareA	KEYWORD2
+setTimer0OutputCompareB	KEYWORD2
+
+enableTimer0CompareAInterrupt	KEYWORD2
+disableTimer0CompareAInterrupt	KEYWORD2
+enableTimer0CompareBInterrupt	KEYWORD2
+disableTimer0CompareBInterrupt	KEYWORD2
+enableTimer0OverflowInterrupt	KEYWORD2
+disableTimer0OverflowInterrupt	KEYWORD2
+
+setTimer1Mode	KEYWORD2
+setTimer1Prescaler	KEYWORD2
+setTimer1Value	KEYWORD2
+getTimer1Value	KEYWORD2
+setTimer1OutputCompareA	KEYWORD2
+setTimer1OutputCompareB	KEYWORD2
+
+enableTimer1CompareAInterrupt	KEYWORD2
+disableTimer1CompareAInterrupt	KEYWORD2
+enableTimer1CompareBInterrupt	KEYWORD2
+disableTimer1CompareBInterrupt	KEYWORD2
+enableTimer1OverflowInterrupt	KEYWORD2
+disableTimer1OverflowInterrupt	KEYWORD2
+
+setTimer2Mode	KEYWORD2
+setTimer2Prescaler	KEYWORD2
+setTimer2Value	KEYWORD2
+getTimer2Value	KEYWORD2
+setTimer2OutputCompareA	KEYWORD2
+setTimer2OutputCompareB	KEYWORD2
+
+enableTimer2CompareAInterrupt	KEYWORD2
+disableTimer2CompareAInterrupt	KEYWORD2
+enableTimer2CompareBInterrupt	KEYWORD2
+disableTimer2CompareBInterrupt	KEYWORD2
+enableTimer2OverflowInterrupt	KEYWORD2
+disableTimer2OverflowInterrupt	KEYWORD2
+
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+TIMER0_NORMAL	LITERAL1
+TIMER1_NORMAL	LITERAL1
+TIMER2_NORMAL	LITERAL1
+TIMER2_OVERFLOW_INTERRUPT	LITERAL1
+
