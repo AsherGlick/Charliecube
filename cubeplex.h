@@ -50,6 +50,12 @@
 // number of LEDs
 #define BUFFERSIZE 192
 
+#ifndef PWMMMAX
+  #define PWMMMAX 8
+#endif
+#define FULL PWMMMAX
+#define HALF PWMMMAX/2
+
 #include "Arduino.h" //#include "WProgram.h"
 #include "mappings.h"
 #include "niceTimer.h"
@@ -191,7 +197,7 @@ void drawLed(int color, int brightness, int x, int y, int z) {
   }
 }
 void drawLed(int color, int x, int y, int z) {
-  drawLed(color,255,x,y,z);
+  drawLed(color,PWMMMAX,x,y,z);
 }
 
 /********************************** DRAW BOX **********************************\
@@ -211,7 +217,7 @@ void drawBox(int color, int brightness, int startx, int starty, int startz, int 
   }
 }
 void drawBox(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-  drawBox(color,8,startx,starty,startz,endx,endy,endz);
+  drawBox(color,PWMMMAX,startx,starty,startz,endx,endy,endz);
 }
 /******************************* DRAW HOLLOW BOX ******************************\
 | This function will draw the walls, celing, and floor of a defined box        |
@@ -233,7 +239,7 @@ void drawHollowBox(int color, int brightness, int startx, int starty, int startz
   }
 }
 void drawHollowBox(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-   drawHollowBox(color,255,startx,starty,startz,endx,endy,endz);
+   drawHollowBox(color,PWMMMAX,startx,starty,startz,endx,endy,endz);
 }
 /****************************** DRAW BOX OUTLINE ******************************\
 | This function will draw edges of a defined box but none of the planes        |
@@ -256,7 +262,7 @@ void drawBoxOutline(int color, int brightness, int startx, int starty, int start
   }
 }
 void drawBoxOutline(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-   drawHollowBox(color,255,startx,starty,startz,endx,endy,endz);
+   drawHollowBox(color,PWMMMAX,startx,starty,startz,endx,endy,endz);
 }
 /******************************* DRAW BOX WALLS *******************************\
 | This function will draw the virtical walls and all four sides of a defined   |
@@ -281,7 +287,7 @@ void drawBoxWalls(int color, int brightness, int startx, int starty, int startz,
   }
 }
 void drawBoxWalls(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-  drawBoxWalls(color,255,startx,starty,startz,endx,endy,endz);
+  drawBoxWalls(color,PWMMMAX,startx,starty,startz,endx,endy,endz);
 }
 /********************************** DRAW LINE *********************************\
 | This function will attempt to draw a line between the two points given. Due  |
@@ -323,7 +329,7 @@ void drawLine(int color, int brightness, int startx, int starty, int startz, int
   drawLed(color,brightness,endx,endy,endz);
 }
 void drawLine(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-  drawLine(color,8,startx, starty, startz, endx, endy, endz);
+  drawLine(color,PWMMMAX,startx, starty, startz, endx, endy, endz);
 }
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////////// DISPLAY //////////////////////////////////
@@ -396,11 +402,7 @@ void flushBuffer() {
 byte pinsB[] = {P1B,P2B,P3B,P4B,P5B,P6B,P7B,P8B,P9B,P10B,P11B,P12B,P13B,P14B,P15B,P16B};
 byte pinsC[] = {P1C,P2C,P3C,P4C,P5C,P6C,P7C,P8C,P9C,P10C,P11C,P12C,P13C,P14C,P15C,P16C};
 byte pinsD[] = {P1D,P2D,P3D,P4D,P5D,P6D,P7D,P8D,P9D,P10D,P11D,P12D,P13D,P14D,P15D,P16D};
-#ifndef PWMMAX
-  #define PWMMMAX 8
-#endif
-#define FULL PWMMMAX
-#define HALF PWMMMAX/2
+
 // the interrupt function to display the leds
 ISR(TIMER2_OVF_vect) {
   // fetch logical group for current LED
