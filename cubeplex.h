@@ -48,7 +48,13 @@
 #define _CUBEPLEX_H_
 
 #define BUFFERSIZE 192
-#include "Arduino.h"
+
+#if defined(ARDUINO) && ARDUINO >= 100
+  #include "Arduino.h"    // for digitalRead, digitalWrite, etc
+#else
+  #include "WProgram.h"
+#endif
+
 #include "mappings.h"
 #include "niceTimer.h"
 
