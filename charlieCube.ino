@@ -57,14 +57,29 @@ void setup() {
   animationMax = 10;
 }
 void loop() {
-  planarSpin();
-  fountian();
-  trifade();
-  shiftSquares();
-  tunnel();
-  chaseTheDot();
-  planarFlop3D();
+  cubeBrightness();
+  //planarSpin();
+  //fountian();
+  //trifade();
+  //shiftSquares();
+  //tunnel();
+  //chaseTheDot();
+  //planarFlop3D();
   
+}
+
+void cubeBrightness() {
+  continuePattern = true;
+  int animationSpeed = 100;
+  while (continuePattern) {
+    
+    for (int i = 30; i < 80; i+=1) {
+      drawBox(red,i,0,0,1,3,3,3);
+      flushBuffer();
+      clearBuffer();
+      delay(animationSpeed);
+    }
+  }
 }
 
 /********************************* PLANAR SPIN ********************************\

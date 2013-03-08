@@ -273,7 +273,7 @@ void disableTimer1OverflowInterrupt() { TIMSK1 &= ~(1<<TOIE1); }
 void setTimer2Mode (int mode);
 void setTimer2Prescaler(int prescaler);
 void setTimer2Value(byte value);
-byte getTimer2Value(byte value);
+byte getTimer2Value();
 void setTimer2OutputCompareA(byte value);
 void setTimer2OutputCompareB(byte value);
 
@@ -327,7 +327,7 @@ void setTimer2Prescaler(int prescaler) {
 | Set or get the current value for timer2                                      |
 \******************************************************************************/
 void setTimer2Value(byte value) {TCNT2 = value;}
-byte getTimer2Value(byte value) {return TCNT2; }
+byte getTimer2Value() {return TCNT2; }
 
 /************************ SET TIMER 2 OUTPUT COMPARE A ************************\
 | The Output Compare Register A contains an 8-bit value that is continuously   |

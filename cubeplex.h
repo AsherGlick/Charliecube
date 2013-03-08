@@ -93,6 +93,10 @@ void initCube() {
   enableTimer2OverflowInterrupt();
   setTimer2Mode (TIMER2_NORMAL);
   
+  // Enable the brightness interrupt
+  enableTimer2CompareAInterrupt();
+  setTimer2OutputCompareA(0xFF);
+  
   // Configure Interrupt for Animation Progression
   setTimer1Prescaler(256);
   enableTimer1OverflowInterrupt();
@@ -573,11 +577,11 @@ ISR(TIMER2_OVF_vect) {
   int count = (pin1 & 0xF0) | ((pin2 & 0xF0)>>4);
   pin1 = pin1&0x0F;
   pin2 = pin2&0x0F;
-  PORTB = 0x00;
-  PORTC = 0x00;
-  PORTD = 0x00;
-  if (count > pwmm){
-  
+  //PORTB = 0x00;
+  //PORTC = 0x00;
+  //PORTD = 0x00;
+  //if (count > pwmm){
+    
     DDRB = pinsB[pin1] | pinsB[pin2];
     DDRC = pinsC[pin1] | pinsC[pin2];
     DDRD = pinsD[pin1] | pinsD[pin2];
@@ -585,13 +589,15 @@ ISR(TIMER2_OVF_vect) {
     PORTB = pinsB[pin1];
     PORTC = pinsC[pin1];
     PORTD = pinsD[pin1];
-    
-  }
+
+  //}
   _cube_current_frame = _cube_current_frame->next;
-  if (_cube_current_frame == _cube__frame+1){
-    pwmm = (pwmm+1); //%PWMMMAX; // oooook so the modulus function is just a tincy bit toooooo slow when only one led is on
-    if (pwmm == PWMMMAX) pwmm = 0; // by too slow i mean "to slow for the program to process an update" here is the fix
-  }
+  setTimer2OutputCompareA(getTimer2Value()+count);
+  
+  //if (_cube_current_frame == _cube__frame+1){
+  //  pwmm = (pwmm+1); //%PWMMMAX; // oooook so the modulus function is just a tincy bit toooooo slow when only one led is on
+  //  if (pwmm == PWMMMAX) pwmm = 0; // by too slow i mean "to slow for the program to process an update" here is the fix
+  //}
 }
 
 /******************************************************************************\
@@ -613,6 +619,22 @@ ISR(TIMER1_OVF_vect) {
     continuePattern = false;
     animationTimer=0;
   }
+}
+
+
+// Turn off led
+ISR(TIMER2_COMPA_vect) {
+  PORTB = 0x00;
+  PORTC = 0x00;
+  PORTD = 0x00;
+  
+  //DDRB = pinsB[4] | pinsB[8];
+  //DDRC = pinsC[4] | pinsC[8];
+  //DDRD = pinsD[4] | pinsD[8];
+  
+  //PORTB = pinsB[4];
+  //PORTC = pinsC[4];
+  //PORTD = pinsD[4];
 }
 
 #endif
