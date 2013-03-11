@@ -210,7 +210,7 @@ void setTimer1Prescaler(int prescaler) {
 /**************************** TIMER 1 DIRECT ACCESS ***************************\
 | Set or get the current value for timer1                                      |
 \******************************************************************************/
-void setTimer1Value(byte value) {TCNT1 = value;}
+void setTimer1Value(unsigned int value) {TCNT1 = value;}
 byte getTimer1Value()           {return TCNT1; }
 
 /************************ SET TIMER 1 OUTPUT COMPARE A ************************\
