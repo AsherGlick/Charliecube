@@ -101,8 +101,8 @@ void initCube() {
   setTimer1Prescaler(1);
   enableTimer1OverflowInterrupt();
   setTimer1Mode (TIMER1_NORMAL);
-  enableTimer1CompareAInterrupt();
-  setTimer1OutputCompareA(0x00FF);
+  //enableTimer1CompareAInterrupt();
+  //setTimer1OutputCompareA(0x00FF);
 }
   //////////////////////////////////////////////////////////////////////////////
  ////////////////////////////// HELPER FUNCTIONS //////////////////////////////
@@ -573,7 +573,7 @@ byte pinsD[] = {P1D,P2D,P3D,P4D,P5D,P6D,P7D,P8D,P9D,P10D,P11D,P12D,P13D,P14D,P15
 #define FULL PWMMMAX
 #define HALF PWMMMAX/2
 // the interrupt function to display the leds
-ISR(TIMER1_COMPA_vect) {
+ISR(TIMER1_OVF_vect) {
   int pin1 = _cube_current_frame->pin1;
   int pin2 = _cube_current_frame->pin2;
   int count = (pin1 & 0xF0) | ((pin2 & 0xF0)>>4);
@@ -600,7 +600,7 @@ ISR(TIMER1_COMPA_vect) {
     pwmm = (pwmm+1); //%PWMMMAX; // oooook so the modulus function is just a tincy bit toooooo slow when only one led is on
     if (pwmm == PWMMMAX) pwmm = 0; // by too slow i mean "to slow for the program to process an update" here is the fix
   }
-  setTimer1Value(0);
+  setTimer1Value(0xFF00);
 }
 
 /******************************************************************************\
@@ -616,7 +616,7 @@ ISR(TIMER1_COMPA_vect) {
 int animationTimer = 0;
 int animationMax = 0;
 
-ISR(TIMER1_OVF_vect) {
+/*ISR(TIMER1_OVF_vect) {
   animationTimer++;
   if (animationTimer == animationMax) {
     continuePattern = false;
@@ -631,7 +631,7 @@ ISR(TIMER1_OVF_vect) {
   //PORTC = pinsC[4];
   //PORTD = pinsD[4];
   
-}
+}*/
 
 
 // Turn off led
