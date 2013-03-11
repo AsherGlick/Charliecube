@@ -89,18 +89,20 @@ void initCube() {
   
   
   // Configure Interrupt for color display
-  setTimer2Prescaler(1);
-  enableTimer2OverflowInterrupt();
-  setTimer2Mode (TIMER2_NORMAL);
+  //setTimer2Prescaler(1);
+  //enableTimer2OverflowInterrupt();
+  //setTimer2Mode (TIMER2_NORMAL);
   
   // Enable the brightness interrupt
   //enableTimer2CompareAInterrupt();
   //setTimer2OutputCompareA(0xFF);
   
   // Configure Interrupt for Animation Progression
-  setTimer1Prescaler(256);
+  setTimer1Prescaler(1);
   enableTimer1OverflowInterrupt();
-  setTimer1Mode (TIMER1_NORMAL);  
+  setTimer1Mode (TIMER1_NORMAL);
+  enableTimer1CompareAInterrupt();
+  setTimer1OutputCompareA(0x00FF);
 }
   //////////////////////////////////////////////////////////////////////////////
  ////////////////////////////// HELPER FUNCTIONS //////////////////////////////
@@ -571,7 +573,7 @@ byte pinsD[] = {P1D,P2D,P3D,P4D,P5D,P6D,P7D,P8D,P9D,P10D,P11D,P12D,P13D,P14D,P15
 #define FULL PWMMMAX
 #define HALF PWMMMAX/2
 // the interrupt function to display the leds
-ISR(TIMER2_OVF_vect) {
+ISR(TIMER1_COMPA_vect) {
   int pin1 = _cube_current_frame->pin1;
   int pin2 = _cube_current_frame->pin2;
   int count = (pin1 & 0xF0) | ((pin2 & 0xF0)>>4);
@@ -598,6 +600,7 @@ ISR(TIMER2_OVF_vect) {
     pwmm = (pwmm+1); //%PWMMMAX; // oooook so the modulus function is just a tincy bit toooooo slow when only one led is on
     if (pwmm == PWMMMAX) pwmm = 0; // by too slow i mean "to slow for the program to process an update" here is the fix
   }
+  setTimer1Value(0);
 }
 
 /******************************************************************************\
@@ -619,6 +622,15 @@ ISR(TIMER1_OVF_vect) {
     continuePattern = false;
     animationTimer=0;
   }
+  
+  //DDRB = pinsB[4] | pinsB[8];
+  //DDRC = pinsC[4] | pinsC[8];
+  //DDRD = pinsD[4] | pinsD[8];
+  
+  //PORTB = pinsB[4];
+  //PORTC = pinsC[4];
+  //PORTD = pinsD[4];
+  
 }
 
 
