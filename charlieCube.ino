@@ -57,14 +57,14 @@ void setup() {
   animationMax = 10;
 }
 void loop() {
-  cubeBrightness();
-  //planarSpin();
-  //fountian();
-  //trifade();
-  //shiftSquares();
-  //tunnel();
-  //chaseTheDot();
-  //planarFlop3D();
+  //cubeBrightness();
+  planarSpin();
+  fountian();
+  trifade();
+  shiftSquares();
+  tunnel();
+  chaseTheDot();
+  planarFlop3D();
   
 }
 
