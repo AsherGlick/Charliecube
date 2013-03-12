@@ -61,6 +61,7 @@
 struct _frame_light{
   char pin1;
   char pin2;
+  unsigned int brightness;
   struct _frame_light * next;
 };
 
@@ -75,6 +76,10 @@ bool continuePattern = false;
 | which is about 600bytes
 \******************************************************************************/
 void initCube() {
+  Serial.begin(9600);
+  Serial.print(sizeof(_frame_light));
+  Serial.print(sizeof(char));
+  Serial.end();
   _cube__frame = (_frame_light*)malloc(sizeof(_frame_light) * (BUFFERSIZE+1));
   _cube_buffer = (char*)malloc(sizeof(char) * BUFFERSIZE);
   
@@ -330,22 +335,23 @@ void drawLine(int color, int brightness, int startx, int starty, int startz, int
   drawLed(color,brightness,endx,endy,endz);
 }
 void drawLine(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-  drawLine(color,8,startx, starty, startz, endx, endy, endz);
+  drawLine(color,255,startx, starty, startz, endx, endy, endz);
 }
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////////// DISPLAY //////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 int pwmm = 0;
-int display_length;
+int offtime; // how long the leds should be off per cycle
 void flushElement(_frame_light* &copy_frame,int pin1,int pin2,int brightness) {
   pin1--;
   pin2--;
   
   (copy_frame+1)->next=copy_frame;
   copy_frame++;
-  copy_frame->pin1=pin1 | ( brightness & 0xF0);
-  copy_frame->pin2=pin2 | ((brightness & 0x0F) << 4);
-  display_length++;
+  copy_frame->pin1=pin1;// | ( brightness & 0xF0);
+  copy_frame->pin2=pin2;// | ((brightness & 0x0F) << 4);
+  copy_frame->brightness = 0xFF00;//65535 - brightness; // 
+  offtime += 255-brightness;
 }
 /******************************** FLUSH BUFFER ********************************\
 | This takes the buffer frame and sets the display memory to match, because    |
@@ -357,7 +363,7 @@ void flushElement(_frame_light* &copy_frame,int pin1,int pin2,int brightness) {
 
 void flushBuffer() {
   _frame_light * copy_frame = _cube__frame;
-  display_length = 0;
+  offtime = 0;
   
   
   //TODO the pins values need to be changed so that the mapping.h file can
@@ -554,7 +560,8 @@ void flushBuffer() {
   if (_cube_buffer[189] != 0)flushElement(copy_frame, 5, 1,_cube_buffer[189]);
   if (_cube_buffer[190] != 0)flushElement(copy_frame, 1,15,_cube_buffer[190]);
   if (_cube_buffer[191] != 0)flushElement(copy_frame,15,12,_cube_buffer[191]);
-
+  //flushElement(copy_frame,16,16,offtime);
+//
   (_cube__frame+1)->next=copy_frame;
   _cube_current_frame=_cube__frame+1;
 }
@@ -564,25 +571,25 @@ void flushBuffer() {
 | This is the interrupt function to turn on one led. After it turns that one   |
 | on it will 
 \******************************************************************************/
-byte pinsB[] = {P1B,P2B,P3B,P4B,P5B,P6B,P7B,P8B,P9B,P10B,P11B,P12B,P13B,P14B,P15B,P16B};
-byte pinsC[] = {P1C,P2C,P3C,P4C,P5C,P6C,P7C,P8C,P9C,P10C,P11C,P12C,P13C,P14C,P15C,P16C};
-byte pinsD[] = {P1D,P2D,P3D,P4D,P5D,P6D,P7D,P8D,P9D,P10D,P11D,P12D,P13D,P14D,P15D,P16D};
-#ifndef PWMMAX
-  #define PWMMMAX 8
-#endif
-#define FULL PWMMMAX
-#define HALF PWMMMAX/2
+byte pinsB[] = {P1B,P2B,P3B,P4B,P5B,P6B,P7B,P8B,P9B,P10B,P11B,P12B,P13B,P14B,P15B,P16B,0x00};
+byte pinsC[] = {P1C,P2C,P3C,P4C,P5C,P6C,P7C,P8C,P9C,P10C,P11C,P12C,P13C,P14C,P15C,P16C,0x00};
+byte pinsD[] = {P1D,P2D,P3D,P4D,P5D,P6D,P7D,P8D,P9D,P10D,P11D,P12D,P13D,P14D,P15D,P16D,0x00};
+//#ifndef PWMMAX
+//  #define PWMMMAX 8
+//#endif
+//#define FULL PWMMMAX
+//#define HALF PWMMMAX/2
 // the interrupt function to display the leds
 ISR(TIMER1_OVF_vect) {
   int pin1 = _cube_current_frame->pin1;
   int pin2 = _cube_current_frame->pin2;
-  int count = (pin1 & 0xF0) | ((pin2 & 0xF0)>>4);
-  pin1 = pin1&0x0F;
-  pin2 = pin2&0x0F;
+  //int count = (pin1 & 0xF0) | ((pin2 & 0xF0)>>4);
+  //pin1 = pin1&0x0F;
+  //pin2 = pin2&0x0F;
   PORTB = 0x00;
   PORTC = 0x00;
   PORTD = 0x00;
-  if (count > pwmm){
+  //if (count > pwmm){
     
     DDRB = pinsB[pin1] | pinsB[pin2];
     DDRC = pinsC[pin1] | pinsC[pin2];
@@ -592,15 +599,15 @@ ISR(TIMER1_OVF_vect) {
     PORTC = pinsC[pin1];
     PORTD = pinsD[pin1];
 
-  }
+  //}
   _cube_current_frame = _cube_current_frame->next;
-  setTimer1OutputCompareA(getTimer2Value()+count);
   
-  if (_cube_current_frame == _cube__frame+1){
-    pwmm = (pwmm+1); //%PWMMMAX; // oooook so the modulus function is just a tincy bit toooooo slow when only one led is on
-    if (pwmm == PWMMMAX) pwmm = 0; // by too slow i mean "to slow for the program to process an update" here is the fix
-  }
-  setTimer1Value(0xFF00);
+  //if (_cube_current_frame == _cube__frame+1){
+  //  pwmm = (pwmm+1); //%PWMMMAX; // oooook so the modulus function is just a tincy bit toooooo slow when only one led is on
+  //  if (pwmm == PWMMMAX) pwmm = 0; // by too slow i mean "to slow for the program to process an update" here is the fix
+  //}
+  setTimer1Value(_cube_current_frame->brightness);
+  //setTimer1Value(0xFF00);
 }
 
 /******************************************************************************\
