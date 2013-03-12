@@ -172,7 +172,7 @@ void disableTimer0OverflowInterrupt() { TIMSK0 &= ~(1<<TOIE0); }
 //////////////////////////////////////////////////////////////////////////////
 void setTimer1Mode (int mode);
 void setTimer1Prescaler(int prescaler);
-void setTimer1Value(byte value);
+void setTimer1Value(unsigned int value);
 byte getTimer1Value(byte value);
 void setTimer1OutputCompareA(byte value);
 void setTimer1OutputCompareB(byte value);

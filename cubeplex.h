@@ -335,7 +335,7 @@ void drawLine(int color, int brightness, int startx, int starty, int startz, int
   drawLed(color,brightness,endx,endy,endz);
 }
 void drawLine(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-  drawLine(color,255,startx, starty, startz, endx, endy, endz);
+  drawLine(color,1,startx, starty, startz, endx, endy, endz);
 }
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////////// DISPLAY //////////////////////////////////
@@ -582,14 +582,17 @@ byte pinsD[] = {P1D,P2D,P3D,P4D,P5D,P6D,P7D,P8D,P9D,P10D,P11D,P12D,P13D,P14D,P15
 //#define HALF PWMMMAX/2
 // the interrupt function to display the leds
 ISR(TIMER1_OVF_vect) {
-  int pin1 = _cube_current_frame->pin1;
-  int pin2 = _cube_current_frame->pin2;
-  //int count = (pin1 & 0xF0) | ((pin2 & 0xF0)>>4);
-  //pin1 = pin1&0x0F;
-  //pin2 = pin2&0x0F;
   PORTB = 0x00;
   PORTC = 0x00;
   PORTD = 0x00;
+  
+  int pin1 = _cube_current_frame->pin1;
+  int pin2 = _cube_current_frame->pin2;
+  int brightness = _cube_current_frame->brightness;
+  //int count = (pin1 & 0xF0) | ((pin2 & 0xF0)>>4);
+  //pin1 = pin1&0x0F;
+  //pin2 = pin2&0x0F;
+  
   //if (count > pwmm){
     
     DDRB = pinsB[pin1] | pinsB[pin2];
@@ -607,7 +610,7 @@ ISR(TIMER1_OVF_vect) {
   //  pwmm = (pwmm+1); //%PWMMMAX; // oooook so the modulus function is just a tincy bit toooooo slow when only one led is on
   //  if (pwmm == PWMMMAX) pwmm = 0; // by too slow i mean "to slow for the program to process an update" here is the fix
   //}
-  setTimer1Value(_cube_current_frame->brightness);
+  setTimer1Value(brightness);
   //setTimer1Value(0xFF00);
 }
 
