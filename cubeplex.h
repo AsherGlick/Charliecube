@@ -335,7 +335,7 @@ void drawLine(int color, int brightness, int startx, int starty, int startz, int
   drawLed(color,brightness,endx,endy,endz);
 }
 void drawLine(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-  drawLine(color,1,startx, starty, startz, endx, endy, endz);
+  drawLine(color,255,startx, starty, startz, endx, endy, endz);
 }
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////////// DISPLAY //////////////////////////////////
