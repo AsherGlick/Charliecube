@@ -57,20 +57,21 @@ void setup() {
   animationMax = 10;
 }
 void loop() {
-  cubeBrightness();
-  //planarSpin();
-  //fountian();
-  //trifade();
-  //shiftSquares();
-  //tunnel();
-  //chaseTheDot();
-  //planarFlop3D();
+  //cubeBrightness();
+  trifade();
+  planarSpin();
+  fountian();
+  trifade();
+  shiftSquares();
+  tunnel();
+  chaseTheDot();
+  planarFlop3D();
   
 }
 
 void cubeBrightness() {
   continuePattern = true;
-  int animationSpeed = 100;
+  int animationSpeed = 300;
   while (continuePattern) {
     
     /*
@@ -86,7 +87,7 @@ void cubeBrightness() {
     flushBuffer();
     clearBuffer();
     delay(animationSpeed);
-    while(true);
+
   }
 }
 
@@ -165,24 +166,24 @@ void trifade() {
   int animationSpeed = 100;
   while (continuePattern) {
     // blue fade out, red fade in
-    for (int i = 1; i <= 8; i++) {
-      drawBox(blue,9-i,0,0,0,3,3,3);
+    for (int i = 1; i <= 255; i++) {
+      drawBox(blue,256-i,0,0,0,3,3,3);
       drawBox(red,i,0,0,0,3,3,3);
       flushBuffer();
       clearBuffer();
       delay(animationSpeed);
     }
     // red fade out, green fade in
-    for (int i = 1; i <= 8; i++) {
-      drawBox(red,9-i,0,0,0,3,3,3);
+    for (int i = 1; i <= 255; i++) {
+      drawBox(red,256-i,0,0,0,3,3,3);
       drawBox(green,i,0,0,0,3,3,3);
       flushBuffer();
       clearBuffer();
       delay(animationSpeed);
     }
     // green fade out, blue fade in
-    for (int i = 1; i <= 8; i++) {
-      drawBox(green,9-i,0,0,0,3,3,3);
+    for (int i = 1; i <= 255; i++) {
+      drawBox(green,256-i,0,0,0,3,3,3);
       drawBox(blue,i,0,0,0,3,3,3);
       flushBuffer();
       clearBuffer();
