@@ -67,7 +67,7 @@ struct _frame_light{
 
 _frame_light * _cube__frame;
 _frame_light * _cube_current_frame;
-char * _cube_buffer;
+unsigned char * _cube_buffer;
 
 bool continuePattern = false;
 
@@ -78,10 +78,10 @@ bool continuePattern = false;
 void initCube() {
   Serial.begin(9600);
   Serial.print(sizeof(_frame_light));
-  Serial.print(sizeof(char));
+  Serial.print(sizeof(unsigned char));
   Serial.end();
   _cube__frame = (_frame_light*)malloc(sizeof(_frame_light) * (BUFFERSIZE+1));
-  _cube_buffer = (char*)malloc(sizeof(char) * BUFFERSIZE);
+  _cube_buffer = (unsigned char*)malloc(sizeof(unsigned char) * BUFFERSIZE);
   
   
   for (int i = 0; i < BUFFERSIZE; i++) {
@@ -341,8 +341,8 @@ void drawLine(int color, int startx, int starty, int startz, int endx, int endy,
  /////////////////////////////////// DISPLAY //////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 int pwmm = 0;
-int offtime; // how long the leds should be off per cycle
-void flushElement(_frame_light* &copy_frame,int pin1,int pin2,int brightness) {
+unsigned int offtime; // how long the leds should be off per cycle
+void flushElement(_frame_light* &copy_frame,int pin1,int pin2,unsigned int brightness) {
   pin1--;
   pin2--;
   
@@ -350,7 +350,8 @@ void flushElement(_frame_light* &copy_frame,int pin1,int pin2,int brightness) {
   copy_frame++;
   copy_frame->pin1=pin1;// | ( brightness & 0xF0);
   copy_frame->pin2=pin2;// | ((brightness & 0x0F) << 4);
-  copy_frame->brightness = 0xFF00;//65535 - brightness; // 
+  //brightness = 8;
+  copy_frame->brightness = 65535 - brightness; // 
   offtime += 255-brightness;
 }
 /******************************** FLUSH BUFFER ********************************\
@@ -560,7 +561,7 @@ void flushBuffer() {
   if (_cube_buffer[189] != 0)flushElement(copy_frame, 5, 1,_cube_buffer[189]);
   if (_cube_buffer[190] != 0)flushElement(copy_frame, 1,15,_cube_buffer[190]);
   if (_cube_buffer[191] != 0)flushElement(copy_frame,15,12,_cube_buffer[191]);
-  //flushElement(copy_frame,16,16,offtime);
+  flushElement(copy_frame,17,17,offtime);
 //
   (_cube__frame+1)->next=copy_frame;
   _cube_current_frame=_cube__frame+1;
