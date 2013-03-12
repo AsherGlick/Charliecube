@@ -73,12 +73,20 @@ void cubeBrightness() {
   int animationSpeed = 100;
   while (continuePattern) {
     
+    /*
     for (int i = 1; i < 255; i+=20) {
       drawBox(red,i,0,0,0,3,3,3);
       flushBuffer();
       clearBuffer();
       delay(animationSpeed);
     }
+    */
+    
+    drawBox(red,1,0,0,0,3,3,3);
+    flushBuffer();
+    clearBuffer();
+    delay(animationSpeed);
+    while(true);
   }
 }
 
