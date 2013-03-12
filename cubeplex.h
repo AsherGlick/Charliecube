@@ -103,7 +103,7 @@ void initCube() {
   //setTimer2OutputCompareA(0xFF);
   
   // Configure Interrupt for Animation Progression
-  setTimer1Prescaler(1);
+  setTimer1Prescaler(8);
   enableTimer1OverflowInterrupt();
   setTimer1Mode (TIMER1_NORMAL);
   //enableTimer1CompareAInterrupt();
@@ -589,6 +589,8 @@ ISR(TIMER1_OVF_vect) {
   int pin1 = _cube_current_frame->pin1;
   int pin2 = _cube_current_frame->pin2;
   int brightness = _cube_current_frame->brightness;
+  
+  _cube_current_frame = _cube_current_frame->next;
   //int count = (pin1 & 0xF0) | ((pin2 & 0xF0)>>4);
   //pin1 = pin1&0x0F;
   //pin2 = pin2&0x0F;
@@ -604,7 +606,7 @@ ISR(TIMER1_OVF_vect) {
     PORTD = pinsD[pin1];
 
   //}
-  _cube_current_frame = _cube_current_frame->next;
+  
   
   //if (_cube_current_frame == _cube__frame+1){
   //  pwmm = (pwmm+1); //%PWMMMAX; // oooook so the modulus function is just a tincy bit toooooo slow when only one led is on
