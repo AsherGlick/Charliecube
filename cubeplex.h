@@ -561,8 +561,8 @@ void flushBuffer() {
   if (_cube_buffer[189] != 0)flushElement(copy_frame, 5, 1,_cube_buffer[189]);
   if (_cube_buffer[190] != 0)flushElement(copy_frame, 1,15,_cube_buffer[190]);
   if (_cube_buffer[191] != 0)flushElement(copy_frame,15,12,_cube_buffer[191]);
-  flushElement(copy_frame,17,17,offtime);
-//
+  flushElement(copy_frame,17,17,offtime); // Include time that the leds are off
+
   (_cube__frame+1)->next=copy_frame;
   _cube_current_frame=_cube__frame+1;
 }
