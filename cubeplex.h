@@ -498,7 +498,7 @@ void drawBoxWalls(int color, int brightness, int startx, int starty, int startz,
       drawLed(color,brightness,endx,j,i);
     }
     // draw x walls
-    for (int j = startx; j <= endx; j++) {
+    for (int j = startx+1; j <= endx-1; j++) {
       drawLed(color,brightness,j,starty,i);
       drawLed(color,brightness,j,endy,i);
     }
