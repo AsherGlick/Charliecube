@@ -579,16 +579,16 @@ void flushBuffer() {
   //offtime = 0; // no longer set offtime to 0, all modifications will be done within the loop
   
   for (int i = 0; i < 192; i++) {
-    unsigned char newBrightness = _cube_buffer[i];
+    int newBrightness = _cube_buffer[i];
     if (previousActivatedFrame->next == i) { // Previously On
-      unsigned char oldBrightness = _cube__frame[i].brightness;
+      int oldBrightness = _cube__frame[i].brightness;
       if (newBrightness == 0) { // Turning Off
         previousActivatedFrame->next = _cube__frame[i].next;// set previous's next to this's next
         offtime -= 255-oldBrightness;// remove the brightness modification from offtime
       }
       else { // Staying On (with possible brightness change)
         offtime += oldBrightness - newBrightness;// Change the offtime variable based on the difference in brightnesses
-        _cube__frame[i].brightness;// Change the brightness value
+        _cube__frame[i].brightness = newBrightness;// Change the brightness value
         previousActivatedFrame = _cube__frame+i; // Set this as the previousActivatedFrame
       }
     }
