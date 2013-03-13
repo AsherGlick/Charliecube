@@ -57,7 +57,7 @@ void setup() {
   animationMax = 10;
 }
 void loop() {
-  cubeBrightness();
+  //cubeBrightness();
   trifade();
   planarSpin();
   fountian();
@@ -83,7 +83,7 @@ void cubeBrightness() {
     }
     */
     
-    drawBox(red,255,0,0,0,3,3,3);
+    drawBox(red,1,0,0,0,3,3,3);
     flushBuffer();
     clearBuffer();
     delay(animationSpeed);
