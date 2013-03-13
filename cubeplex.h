@@ -435,7 +435,7 @@ void drawBox(int color, int brightness, int startx, int starty, int startz, int 
   }
 }
 void drawBox(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-  drawBox(color,8,startx,starty,startz,endx,endy,endz);
+  drawBox(color,255,startx,starty,startz,endx,endy,endz);
 }
 /******************************* DRAW HOLLOW BOX ******************************\
 | This function will draw the walls, celing, and floor of a defined box        |
