@@ -59,10 +59,10 @@
 #include "niceTimer.h"
 
 struct _frame_light{
-  char pin1;
-  char pin2;
+  unsigned char pin1;
+  unsigned char pin2;
   unsigned int brightness;
-  struct _frame_light * next;
+  unsigned char next;
 };
 
 _frame_light * _cube__frame;
@@ -557,20 +557,32 @@ void flushElement(_frame_light* &copy_frame,int pin1,int pin2,unsigned int brigh
 \******************************************************************************/
 
 void flushBuffer() {
-  _frame_light * previousActivatedFrame = _cube__frame+192;
-  //offtime = 0;
+  _frame_light * previousActivatedFrame = _cube__frame+192; // Use this to determine if an led is on and how to handle inserting and deleting elements in the list
+  //offtime = 0; // no longer set offtime to 0, all modifications will be done within the loop
   
   for (int i = 0; i < 192; i++) {
-    // Turning off
-      // set previous's next to this next
-      // remove the brightness modification from offtime
-    // Turning on
-      // set this's next to the previous's next
-      // set this brightness to the brightness value
-      // modify the offtime based on the brightness
-      // set  
-    // Staying on (changing brightness)
-    // staying off (do nothing)
+    if (previousActivatedFrame->next == i) { // Previously On
+      if (_cube_buffer[i] == 0) { // Turning Off
+        // set previous's next to this's next
+        // remove the brightness modification from offtime
+      }
+      else { // Staying On (with possible brightness change)
+        // change the offtime variable based on the difference in brightnesses
+        // change the brightness value
+        // Set this as the previousActivatedFrame
+      }
+    }
+    else { // Previously Off
+      if (_cube_buffer[i] == 0) {} // Staying Off (do nothing)
+      else { // Turning On
+        //Set this's next to the previous's next
+        // set this brightness to the brightness value
+        // modify the offtime based on the brightness
+        // Set the the previous's mext to this
+        // Set this as the previousActivatedFrame
+      }
+      
+    }
   }
   
   
