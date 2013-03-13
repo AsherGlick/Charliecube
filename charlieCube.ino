@@ -71,7 +71,7 @@ void loop() {
 
 void cubeBrightness() {
   continuePattern = true;
-  int animationSpeed = 300;
+  int animationSpeed = 50;
   while (continuePattern) {
     
     /*
@@ -83,12 +83,10 @@ void cubeBrightness() {
     }
     */
     
-    //drawBox(red,255,0,0,0,3,3,3);
-    //flushBuffer();
-    //clearBuffer();
-    //delay(animationSpeed);
-    while(true);
-
+    drawBox(red,255,0,0,0,3,3,3);
+    flushBuffer();
+    clearBuffer();
+    delay(animationSpeed);
   }
 }
 

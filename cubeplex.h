@@ -91,8 +91,8 @@ void initCube() {
   //_cube__frame->pin1=0;
   //_cube__frame->pin2=0;
   _cube_current_frame = _cube__frame+192; // Set the first frame to the 'off' led
-  _cube_current_frame->pin1 = 4;
-  _cube_current_frame->pin2 = 8;
+  _cube_current_frame->pin1 = 0;
+  _cube_current_frame->pin2 = 0;
   _cube_current_frame->next = 190;
   _cube_current_frame->brightness=0;
 
@@ -599,7 +599,7 @@ void flushBuffer() {
         _cube__frame[i].next = previousActivatedFrame->next;//Set this's next to the previous's next
         _cube__frame[i].brightness = newBrightness; // set this brightness to the brightness value
         offtime += 255 - newBrightness;// modify the offtime based on the brightness
-        previousActivatedFrame->next;// Set the the previous's mext to this
+        previousActivatedFrame->next = i;// Set the the previous's mext to this
         previousActivatedFrame = _cube__frame+i;// Set this as the previousActivatedFrame
       }
       
