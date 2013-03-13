@@ -54,11 +54,11 @@ void setup() {
   initCube();
   
   // how many secconds until the animation is told to progress
-  animationMax = 10;
+  animationMax = 2550;
 }
 void loop() {
   //cubeBrightness();
-  trifade();
+  //trifade();
   planarSpin();
   fountian();
   trifade();
@@ -162,10 +162,10 @@ void fountian() {
 \******************************************************************************/
 void trifade() {
   continuePattern = true;
-  int animationSpeed = 100;
+  int animationSpeed = 20;
   while (continuePattern) {
     // blue fade out, red fade in
-    for (int i = 1; i <= 255; i++) {
+    for (int i = 1; i <= 255; i+=7) {
       drawBox(blue,256-i,0,0,0,3,3,3);
       drawBox(red,i,0,0,0,3,3,3);
       flushBuffer();
@@ -173,7 +173,7 @@ void trifade() {
       delay(animationSpeed);
     }
     // red fade out, green fade in
-    for (int i = 1; i <= 255; i++) {
+    for (int i = 1; i <= 255; i+=7) {
       drawBox(red,256-i,0,0,0,3,3,3);
       drawBox(green,i,0,0,0,3,3,3);
       flushBuffer();
@@ -181,7 +181,7 @@ void trifade() {
       delay(animationSpeed);
     }
     // green fade out, blue fade in
-    for (int i = 1; i <= 255; i++) {
+    for (int i = 1; i <= 255; i+=7) {
       drawBox(green,256-i,0,0,0,3,3,3);
       drawBox(blue,i,0,0,0,3,3,3);
       flushBuffer();
