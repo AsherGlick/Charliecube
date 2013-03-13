@@ -91,9 +91,25 @@ void initCube() {
   //_cube__frame->pin1=0;
   //_cube__frame->pin2=0;
   _cube_current_frame = _cube__frame+192; // Set the first frame to the 'off' led
-  _cube_current_frame->pin1 = 0;
-  _cube_current_frame->pin2 = 0
+  _cube_current_frame->pin1 = 4;
+  _cube_current_frame->pin2 = 8;
+  _cube_current_frame->next = 190;
+  _cube_current_frame->brightness=0;
+
   
+  //DEBUG STATEMENT
+  _cube_current_frame = _cube__frame+191; // Set the first frame to the 'off' led
+  //_cube_current_frame->pin1 = 16;
+  //_cube_current_frame->pin2 = 4;
+  _cube_current_frame->next = 192;
+  _cube_current_frame->brightness=255;
+  
+  _cube_current_frame = _cube__frame+190; // Set the first frame to the 'off' led
+  //_cube_current_frame->pin1 = 12;
+  //_cube_current_frame->pin2 = 16;
+  _cube_current_frame->next = 191;
+  _cube_current_frame->brightness=255;
+  //END DEBUG
   
   // Configure Interrupt for color display
   //setTimer2Prescaler(1);
@@ -590,12 +606,12 @@ void flushBuffer() {
     }
   }
   // After finishing creating the new LEDs and removing the old ones set the brightness of the off LED
-  if (offtime == 0) {
-    _cube__frame[191].brightness = 255;
-  }
-  else {
+  //if (offtime == 0) {
+  //  _cube__frame[191].brightness = 255;
+  //}
+  //else {
     _cube__frame[192].brightness = offtime;
-  }
+  //}
   //flushElement(copy_frame,17,17,offtime); // Include time that the leds are off
 }
 
