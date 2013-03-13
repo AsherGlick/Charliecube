@@ -53,12 +53,10 @@ int color = red;
 void setup() {
   initCube();
   
-  // how many secconds until the animation is told to progress
+  // Animation Max represents how many times timer2 should overflow before changing the animation
   animationMax = 2550;
 }
 void loop() {
-  //cubeBrightness();
-  //trifade();
   planarSpin();
   fountian();
   trifade();
@@ -67,27 +65,6 @@ void loop() {
   chaseTheDot();
   planarFlop3D();
   
-}
-
-void cubeBrightness() {
-  continuePattern = true;
-  int animationSpeed = 50;
-  while (continuePattern) {
-    
-    /*
-    for (int i = 1; i < 255; i+=20) {
-      drawBox(red,i,0,0,0,3,3,3);
-      flushBuffer();
-      clearBuffer();
-      delay(animationSpeed);
-    }
-    */
-    
-    drawBox(red,1,0,0,0,3,3,3);
-    flushBuffer();
-    clearBuffer();
-    delay(animationSpeed);
-  }
 }
 
 /********************************* PLANAR SPIN ********************************\
@@ -254,10 +231,9 @@ void tunnel() {
   int animationSpeed =100;
   
   int color1[]  = {R,R,R,R,B,B,B,B};
-  int bright1[] = {2,4,6,8,2,4,6,8};
+  int bright1[] = {63,127,191,255,63,127,191,255};
   int color2[]  = {B,B,B,B,R,R,R,R};
-//int bright2[] = {6,4,2,0,6,4,2,0};
-  int bright2[] = {8,6,4,2,8,6,4,2};
+  int bright2[] = {255,191,127,63,255,191,127,63};
   
   int index[]   = {0,1,2,3,4,5,6,7};
   
