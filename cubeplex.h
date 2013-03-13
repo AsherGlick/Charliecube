@@ -584,8 +584,6 @@ void flushBuffer() {
       
     }
   }
-  
-  
   //flushElement(copy_frame,17,17,offtime); // Include time that the leds are off
 }
 
@@ -597,12 +595,7 @@ void flushBuffer() {
 byte pinsB[] = {P1B,P2B,P3B,P4B,P5B,P6B,P7B,P8B,P9B,P10B,P11B,P12B,P13B,P14B,P15B,P16B,0x00};
 byte pinsC[] = {P1C,P2C,P3C,P4C,P5C,P6C,P7C,P8C,P9C,P10C,P11C,P12C,P13C,P14C,P15C,P16C,0x00};
 byte pinsD[] = {P1D,P2D,P3D,P4D,P5D,P6D,P7D,P8D,P9D,P10D,P11D,P12D,P13D,P14D,P15D,P16D,0x00};
-//#ifndef PWMMAX
-//  #define PWMMMAX 8
-//#endif
-//#define FULL PWMMMAX
-//#define HALF PWMMMAX/2
-// the interrupt function to display the leds
+
 ISR(TIMER1_OVF_vect) {
   PORTB = 0x00;
   PORTC = 0x00;
@@ -613,29 +606,16 @@ ISR(TIMER1_OVF_vect) {
   int brightness = _cube_current_frame->brightness;
   
   _cube_current_frame = _cube_current_frame->next;
-  //int count = (pin1 & 0xF0) | ((pin2 & 0xF0)>>4);
-  //pin1 = pin1&0x0F;
-  //pin2 = pin2&0x0F;
   
-  //if (count > pwmm){
-    
-    DDRB = pinsB[pin1] | pinsB[pin2];
-    DDRC = pinsC[pin1] | pinsC[pin2];
-    DDRD = pinsD[pin1] | pinsD[pin2];
+  DDRB = pinsB[pin1] | pinsB[pin2];
+  DDRC = pinsC[pin1] | pinsC[pin2];
+  DDRD = pinsD[pin1] | pinsD[pin2];
   
-    PORTB = pinsB[pin1];
-    PORTC = pinsC[pin1];
-    PORTD = pinsD[pin1];
+  PORTB = pinsB[pin1];
+  PORTC = pinsC[pin1];
+  PORTD = pinsD[pin1];
 
-  //}
-  
-  
-  //if (_cube_current_frame == _cube__frame+1){
-  //  pwmm = (pwmm+1); //%PWMMMAX; // oooook so the modulus function is just a tincy bit toooooo slow when only one led is on
-  //  if (pwmm == PWMMMAX) pwmm = 0; // by too slow i mean "to slow for the program to process an update" here is the fix
-  //}
   setTimer1Value(brightness);
-  //setTimer1Value(0xFF00);
 }
 
 /******************************************************************************\
