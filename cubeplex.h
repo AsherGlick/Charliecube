@@ -112,9 +112,9 @@ void initCube() {
   //END DEBUG
   
   // Configure Interrupt for color display
-  //setTimer2Prescaler(1);
-  //enableTimer2OverflowInterrupt();
-  //setTimer2Mode (TIMER2_NORMAL);
+  setTimer2Prescaler(256);
+  enableTimer2OverflowInterrupt();
+  setTimer2Mode (TIMER2_NORMAL);
   
   // Enable the brightness interrupt
   //enableTimer2CompareAInterrupt();
@@ -659,37 +659,11 @@ ISR(TIMER1_OVF_vect) {
 int animationTimer = 0;
 int animationMax = 0;
 
-/*ISR(TIMER1_OVF_vect) {
+ISR(TIMER2_OVF_vect) {
   animationTimer++;
   if (animationTimer == animationMax) {
     continuePattern = false;
     animationTimer=0;
-  }
-  
-  //DDRB = pinsB[4] | pinsB[8];
-  //DDRC = pinsC[4] | pinsC[8];
-  //DDRD = pinsD[4] | pinsD[8];
-  
-  //PORTB = pinsB[4];
-  //PORTC = pinsC[4];
-  //PORTD = pinsD[4];
-  
-}*/
-
-
-// Turn off led
-/*ISR(TIMER2_COMPA_vect) {
-  PORTB = 0x00;
-  PORTC = 0x00;
-  PORTD = 0x00;
-  
-  //DDRB = pinsB[4] | pinsB[8];
-  //DDRC = pinsC[4] | pinsC[8];
-  //DDRD = pinsD[4] | pinsD[8];
-  
-  //PORTB = pinsB[4];
-  //PORTC = pinsC[4];
-  //PORTD = pinsD[4];
-}*/
-
+  }  
+}
 #endif
