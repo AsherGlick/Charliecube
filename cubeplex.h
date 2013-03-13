@@ -90,7 +90,9 @@ void initCube() {
   //_cube__frame->next = _cube__frame;
   //_cube__frame->pin1=0;
   //_cube__frame->pin2=0;
-  _cube_current_frame = _cube__frame;
+  _cube_current_frame = _cube__frame+192; // Set the first frame to the 'off' led
+  _cube_current_frame->pin1 = 0;
+  _cube_current_frame->pin2 = 0
   
   
   // Configure Interrupt for color display
@@ -563,14 +565,15 @@ void flushBuffer() {
   for (int i = 0; i < 192; i++) {
     unsigned char newBrightness = _cube_buffer[i];
     if (previousActivatedFrame->next == i) { // Previously On
+      unsigned char oldBrightness = _cube__frame[i].brightness;
       if (newBrightness == 0) { // Turning Off
-        // set previous's next to this's next
-        // remove the brightness modification from offtime
+        previousActivatedFrame->next = _cube__frame[i].next;// set previous's next to this's next
+        offtime -= 255-oldBrightness;// remove the brightness modification from offtime
       }
       else { // Staying On (with possible brightness change)
-        // change the offtime variable based on the difference in brightnesses
-        // change the brightness value
-        // Set this as the previousActivatedFrame
+        offtime += oldBrightness - newBrightness;// Change the offtime variable based on the difference in brightnesses
+        _cube__frame[i].brightness;// Change the brightness value
+        previousActivatedFrame = _cube__frame+i; // Set this as the previousActivatedFrame
       }
     }
     else { // Previously Off
@@ -586,6 +589,13 @@ void flushBuffer() {
       
     }
   }
+  // After finishing creating the new LEDs and removing the old ones set the brightness of the off LED
+  if (offtime == 0) {
+    _cube__frame[191].brightness = 255;
+  }
+  else {
+    _cube__frame[192].brightness = offtime;
+  }
   //flushElement(copy_frame,17,17,offtime); // Include time that the leds are off
 }
 
@@ -594,9 +604,9 @@ void flushBuffer() {
 | This is the interrupt function to turn on one led. After it turns that one   |
 | on it will 
 \******************************************************************************/
-byte pinsB[] = {P1B,P2B,P3B,P4B,P5B,P6B,P7B,P8B,P9B,P10B,P11B,P12B,P13B,P14B,P15B,P16B,0x00};
-byte pinsC[] = {P1C,P2C,P3C,P4C,P5C,P6C,P7C,P8C,P9C,P10C,P11C,P12C,P13C,P14C,P15C,P16C,0x00};
-byte pinsD[] = {P1D,P2D,P3D,P4D,P5D,P6D,P7D,P8D,P9D,P10D,P11D,P12D,P13D,P14D,P15D,P16D,0x00};
+byte pinsB[] = {0x00,P1B,P2B,P3B,P4B,P5B,P6B,P7B,P8B,P9B,P10B,P11B,P12B,P13B,P14B,P15B,P16B};
+byte pinsC[] = {0x00,P1C,P2C,P3C,P4C,P5C,P6C,P7C,P8C,P9C,P10C,P11C,P12C,P13C,P14C,P15C,P16C};
+byte pinsD[] = {0x00,P1D,P2D,P3D,P4D,P5D,P6D,P7D,P8D,P9D,P10D,P11D,P12D,P13D,P14D,P15D,P16D};
 
 ISR(TIMER1_OVF_vect) {
   PORTB = 0x00;
@@ -617,7 +627,7 @@ ISR(TIMER1_OVF_vect) {
   PORTC = pinsC[pin1];
   PORTD = pinsD[pin1];
 
-  setTimer1Value(brightness);
+  setTimer1Value(0xFFFF - brightness);
 }
 
 /******************************************************************************\
