@@ -87,9 +87,9 @@ void initCube() {
   for (int i = 0; i < BUFFERSIZE; i++) {
     _cube_buffer[i] = 0;
   }
-  _cube__frame->next = _cube__frame;
-  _cube__frame->pin1=0;
-  _cube__frame->pin2=0;
+  //_cube__frame->next = _cube__frame;
+  //_cube__frame->pin1=0;
+  //_cube__frame->pin2=0;
   _cube_current_frame = _cube__frame;
   
   
@@ -536,7 +536,7 @@ void drawLine(int color, int startx, int starty, int startz, int endx, int endy,
 //////////////////////////////////////////////////////////////////////////////
 int pwmm = 0;
 unsigned int offtime; // how long the leds should be off per cycle
-void flushElement(_frame_light* &copy_frame,int pin1,int pin2,unsigned int brightness) {
+/*void flushElement(_frame_light* &copy_frame,int pin1,int pin2,unsigned int brightness) {
   pin1--;
   pin2--;
   
@@ -547,7 +547,7 @@ void flushElement(_frame_light* &copy_frame,int pin1,int pin2,unsigned int brigh
   //brightness = 8;
   copy_frame->brightness = 65535 - brightness; // 
   offtime += 255-brightness;
-}
+}*/
 /******************************** FLUSH BUFFER ********************************\
 | This takes the buffer frame and sets the display memory to match, because    |
 | the display memory needs to be faster it is split up into two arrays instead |
@@ -561,8 +561,9 @@ void flushBuffer() {
   //offtime = 0; // no longer set offtime to 0, all modifications will be done within the loop
   
   for (int i = 0; i < 192; i++) {
+    unsigned char newBrightness = _cube_buffer[i];
     if (previousActivatedFrame->next == i) { // Previously On
-      if (_cube_buffer[i] == 0) { // Turning Off
+      if (newBrightness == 0) { // Turning Off
         // set previous's next to this's next
         // remove the brightness modification from offtime
       }
@@ -573,13 +574,14 @@ void flushBuffer() {
       }
     }
     else { // Previously Off
-      if (_cube_buffer[i] == 0) {} // Staying Off (do nothing)
+      if (newBrightness == 0) {} // Staying Off (do nothing)
       else { // Turning On
-        //Set this's next to the previous's next
-        // set this brightness to the brightness value
-        // modify the offtime based on the brightness
-        // Set the the previous's mext to this
-        // Set this as the previousActivatedFrame
+        
+        _cube__frame[i].next = previousActivatedFrame->next;//Set this's next to the previous's next
+        _cube__frame[i].brightness = newBrightness; // set this brightness to the brightness value
+        offtime += 255 - newBrightness;// modify the offtime based on the brightness
+        previousActivatedFrame->next;// Set the the previous's mext to this
+        previousActivatedFrame = _cube__frame+i;// Set this as the previousActivatedFrame
       }
       
     }
@@ -605,7 +607,7 @@ ISR(TIMER1_OVF_vect) {
   int pin2 = _cube_current_frame->pin2;
   int brightness = _cube_current_frame->brightness;
   
-  _cube_current_frame = _cube_current_frame->next;
+  _cube_current_frame = _cube__frame + _cube_current_frame->next;
   
   DDRB = pinsB[pin1] | pinsB[pin2];
   DDRC = pinsC[pin1] | pinsC[pin2];
