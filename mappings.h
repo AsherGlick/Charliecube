@@ -44,75 +44,188 @@
 | ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   |
 | POSSIBILITY OF SUCH DAMAGE.                                                  |
 \******************************************************************************/
+/*
+__AVR_ATtiny24__
+__AVR_ATtiny44__
+__AVR_ATtiny84__
+__AVR_ATtiny25__
+__AVR_ATtiny45__
+__AVR_ATtiny85__
 
+__AVR_ATmega1280__
+__AVR_ATmega2560__
+__AVR_ATmega1284P__
+__AVR_ATmega644P__
+
+__AVR_ATmega328P__
+__AVR_ATmega32U4__
+*/
 #ifndef _MAPPINGS_H_
-#define _MAPPINGS_H_
+  #define _MAPPINGS_H_
 
-/*********************** ATMEGA328 PIN TO PORT MAPPINGS ***********************\
-| These are the pin to port mappings for an ATMEGA328                          |
-\******************************************************************************/
-#define P1B 0x00
-#define P1C 0x00
-#define P1D 0x04
+  
+  #ifdef __AVR_ATmega328P__
+    /*********************** ATMEGA328 PIN TO PORT MAPPINGS ***********************\
+    | These are the pin to port mappings for an ATMEGA328                          |
+    \******************************************************************************/
+    #define WIRE_1_PORT_B 0x00
+    #define WIRE_1_PORT_C 0x00
+    #define WIRE_1_PORT_D 0x04
+    
+    #define WIRE_2_PORT_B 0x00
+    #define WIRE_2_PORT_C 0x00
+    #define WIRE_2_PORT_D 0x08
+    
+    #define WIRE_3_PORT_B 0x00
+    #define WIRE_3_PORT_C 0x00
+    #define WIRE_3_PORT_D 0x10
+    
+    #define WIRE_4_PORT_B 0x00
+    #define WIRE_4_PORT_C 0x00
+    #define WIRE_4_PORT_D 0x20
+    
+    #define WIRE_5_PORT_B 0x00
+    #define WIRE_5_PORT_C 0x00
+    #define WIRE_5_PORT_D 0x40
+    
+    #define WIRE_6_PORT_B 0x00
+    #define WIRE_6_PORT_C 0x00
+    #define WIRE_6_PORT_D 0x80
+    
+    #define WIRE_7_PORT_B 0x01
+    #define WIRE_7_PORT_C 0x00
+    #define WIRE_7_PORT_D 0x00
+    
+    #define WIRE_8_PORT_B 0x02
+    #define WIRE_8_PORT_C 0x00
+    #define WIRE_8_PORT_D 0x00
+    
+    #define WIRE_9_PORT_B 0x04
+    #define WIRE_9_PORT_C 0x00
+    #define WIRE_9_PORT_D 0x00
+    
+    #define WIRE_10_PORT_B 0x08
+    #define WIRE_10_PORT_C 0x00
+    #define WIRE_10_PORT_D 0x00
+    
+    #define WIRE_11_PORT_B 0x10
+    #define WIRE_11_PORT_C 0x00
+    #define WIRE_11_PORT_D 0x00
+    
+    #define WIRE_12_PORT_B 0x20
+    #define WIRE_12_PORT_C 0x00
+    #define WIRE_12_PORT_D 0x00
+    
+    #define WIRE_13_PORT_B 0x00
+    #define WIRE_13_PORT_C 0x01
+    #define WIRE_13_PORT_D 0x00
+    
+    #define WIRE_14_PORT_B 0x00
+    #define WIRE_14_PORT_C 0x02
+    #define WIRE_14_PORT_D 0x00
+    
+    #define WIRE_15_PORT_B 0x00
+    #define WIRE_15_PORT_C 0x04
+    #define WIRE_15_PORT_D 0x00
+  #endif // __AVR_ATmega328P__
+    
+  // ARDUINO LEONARDO (ATMEGA32U4)
+  #ifdef __AVR_ATmega32U4__
+    #define WIRE_1_PORT_B 0x00
+    #define WIRE_1_PORT_C 0x00
+    #define WIRE_1_PORT_D 0x02
+    #define WIRE_1_PORT_E 0x00
+    #define WIRE_1_PORT_F 0x00
+    
+    #define WIRE_2_PORT_B 0x00
+    #define WIRE_2_PORT_C 0x00
+    #define WIRE_2_PORT_D 0x01
+    #define WIRE_2_PORT_E 0x00
+    #define WIRE_2_PORT_F 0x00
+    
+    #define WIRE_3_PORT_B 0x00
+    #define WIRE_3_PORT_C 0x00
+    #define WIRE_3_PORT_D 0x08
+    #define WIRE_3_PORT_E 0x00
+    #define WIRE_3_PORT_F 0x00
+    
+    #define WIRE_4_PORT_B 0x00
+    #define WIRE_4_PORT_C 0x40
+    #define WIRE_4_PORT_D 0x00
+    #define WIRE_4_PORT_E 0x00
+    #define WIRE_4_PORT_F 0x00
+    
+    #define WIRE_5_PORT_B 0x00
+    #define WIRE_5_PORT_C 0x00
+    #define WIRE_5_PORT_D 0x80
+    #define WIRE_5_PORT_E 0x00
+    #define WIRE_5_PORT_F 0x00
+    
+    #define WIRE_6_PORT_B 0x00
+    #define WIRE_6_PORT_C 0x00
+    #define WIRE_6_PORT_D 0x00
+    #define WIRE_6_PORT_E 0x40
+    #define WIRE_6_PORT_F 0x00
+    
+    #define WIRE_7_PORT_B 0x10
+    #define WIRE_7_PORT_C 0x00
+    #define WIRE_7_PORT_D 0x00
+    #define WIRE_7_PORT_E 0x00
+    #define WIRE_7_PORT_F 0x00
+    
+    #define WIRE_8_PORT_B 0x20
+    #define WIRE_8_PORT_C 0x00
+    #define WIRE_8_PORT_D 0x00
+    #define WIRE_8_PORT_E 0x00
+    #define WIRE_8_PORT_F 0x00
+    
+    #define WIRE_9_PORT_B 0x40
+    #define WIRE_9_PORT_C 0x00
+    #define WIRE_9_PORT_D 0x00
+    #define WIRE_9_PORT_E 0x00
+    #define WIRE_9_PORT_F 0x00
+    
+    #define WIRE_10_PORT_B 0x80
+    #define WIRE_10_PORT_C 0x00
+    #define WIRE_10_PORT_D 0x00
+    #define WIRE_10_PORT_E 0x00
+    #define WIRE_10_PORT_F 0x00
+    
+    #define WIRE_11_PORT_B 0x00
+    #define WIRE_11_PORT_C 0x00
+    #define WIRE_11_PORT_D 0x40
+    #define WIRE_11_PORT_E 0x00
+    #define WIRE_11_PORT_F 0x00
+    
+    #define WIRE_12_PORT_B 0x00
+    #define WIRE_12_PORT_C 0x80
+    #define WIRE_12_PORT_D 0x00
+    #define WIRE_12_PORT_E 0x00
+    #define WIRE_12_PORT_F 0x00
+    
+    #define WIRE_13_PORT_B 0x00
+    #define WIRE_13_PORT_C 0x80
+    #define WIRE_13_PORT_D 0x00
+    #define WIRE_13_PORT_E 0x00
+    #define WIRE_13_PORT_F 0x00
+    
+    #define WIRE_14_PORT_B 0x00
+    #define WIRE_14_PORT_C 0x00
+    #define WIRE_14_PORT_D 0x00
+    #define WIRE_14_PORT_E 0x00
+    #define WIRE_14_PORT_F 0x40
+    
+    #define WIRE_15_PORT_B 0x00
+    #define WIRE_15_PORT_C 0x00
+    #define WIRE_15_PORT_D 0x00
+    #define WIRE_15_PORT_E 0x00
+    #define WIRE_15_PORT_F 0x20
+    
+    #define WIRE_16_PORT_B 0x00
+    #define WIRE_16_PORT_C 0x00
+    #define WIRE_16_PORT_D 0x00
+    #define WIRE_16_PORT_E 0x00
+    #define WIRE_16_PORT_F 0x10
 
-#define P2B 0x00
-#define P2C 0x00
-#define P2D 0x08
-
-#define P3B 0x00
-#define P3C 0x00
-#define P3D 0x10
-
-#define P4B 0x00
-#define P4C 0x00
-#define P4D 0x20
-
-#define P5B 0x00
-#define P5C 0x00
-#define P5D 0x40
-
-#define P6B 0x00
-#define P6C 0x00
-#define P6D 0x80
-
-#define P7B 0x01
-#define P7C 0x00
-#define P7D 0x00
-
-#define P8B 0x02
-#define P8C 0x00
-#define P8D 0x00
-
-#define P9B 0x04
-#define P9C 0x00
-#define P9D 0x00
-
-#define P10B 0x08
-#define P10C 0x00
-#define P10D 0x00
-
-#define P11B 0x10
-#define P11C 0x00
-#define P11D 0x00
-
-#define P12B 0x20
-#define P12C 0x00
-#define P12D 0x00
-
-#define P13B 0x00
-#define P13C 0x01
-#define P13D 0x00
-
-#define P14B 0x00
-#define P14C 0x02
-#define P14D 0x00
-
-#define P15B 0x00
-#define P15C 0x04
-#define P15D 0x00
-
-#define P16B 0x00
-#define P16C 0x08
-#define P16D 0x00
-
-#endif
+  #endif // END __AVR_ATmega32U4__
+#endif // _MAPPINGS_H_
