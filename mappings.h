@@ -127,6 +127,10 @@ __AVR_ATmega32U4__
     #define WIRE_15_PORT_B 0x00
     #define WIRE_15_PORT_C 0x04
     #define WIRE_15_PORT_D 0x00
+    
+    #define WIRE_16_PORT_B 0x00
+    #define WIRE_16_PORT_C 0x08
+    #define WIRE_16_PORT_D 0x00
   #endif // __AVR_ATmega328P__
     
   // ARDUINO LEONARDO (ATMEGA32U4)
