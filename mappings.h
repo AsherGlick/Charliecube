@@ -149,7 +149,7 @@ __AVR_ATmega32U4__
     
     #define WIRE_3_PORT_B 0x00
     #define WIRE_3_PORT_C 0x00
-    #define WIRE_3_PORT_D 0x08
+    #define WIRE_3_PORT_D 0x10
     #define WIRE_3_PORT_E 0x00
     #define WIRE_3_PORT_F 0x00
     
@@ -208,10 +208,10 @@ __AVR_ATmega32U4__
     #define WIRE_12_PORT_F 0x00
     
     #define WIRE_13_PORT_B 0x00
-    #define WIRE_13_PORT_C 0x80
+    #define WIRE_13_PORT_C 0x00
     #define WIRE_13_PORT_D 0x00
     #define WIRE_13_PORT_E 0x00
-    #define WIRE_13_PORT_F 0x00
+    #define WIRE_13_PORT_F 0x80
     
     #define WIRE_14_PORT_B 0x00
     #define WIRE_14_PORT_C 0x00
