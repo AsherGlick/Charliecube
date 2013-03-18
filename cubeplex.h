@@ -626,12 +626,27 @@ byte pinsC[] = {0x00,WIRE_1_PORT_C,WIRE_2_PORT_C,WIRE_3_PORT_C,WIRE_4_PORT_C,WIR
 byte pinsD[] = {0x00,WIRE_1_PORT_D,WIRE_2_PORT_D,WIRE_3_PORT_D,WIRE_4_PORT_D,WIRE_5_PORT_D,WIRE_6_PORT_D,WIRE_7_PORT_D,WIRE_8_PORT_D,WIRE_9_PORT_D,WIRE_10_PORT_D,WIRE_11_PORT_D,WIRE_12_PORT_D,WIRE_13_PORT_D,WIRE_14_PORT_D,WIRE_15_PORT_D,WIRE_16_PORT_D};
 #endif
 #ifdef __AVR_ATmega32U4__ // Arduino Leonardo
+byte pinsB[] = {0x00,WIRE_1_PORT_B,WIRE_2_PORT_B,WIRE_3_PORT_B,WIRE_4_PORT_B,WIRE_5_PORT_B,WIRE_6_PORT_B,WIRE_7_PORT_B,WIRE_8_PORT_B,WIRE_9_PORT_B,WIRE_10_PORT_B,WIRE_11_PORT_B,WIRE_12_PORT_B,WIRE_13_PORT_B,WIRE_14_PORT_B,WIRE_15_PORT_B,WIRE_16_PORT_B};
+byte pinsC[] = {0x00,WIRE_1_PORT_C,WIRE_2_PORT_C,WIRE_3_PORT_C,WIRE_4_PORT_C,WIRE_5_PORT_C,WIRE_6_PORT_C,WIRE_7_PORT_C,WIRE_8_PORT_C,WIRE_9_PORT_C,WIRE_10_PORT_C,WIRE_11_PORT_C,WIRE_12_PORT_C,WIRE_13_PORT_C,WIRE_14_PORT_C,WIRE_15_PORT_C,WIRE_16_PORT_C};
+byte pinsD[] = {0x00,WIRE_1_PORT_D,WIRE_2_PORT_D,WIRE_3_PORT_D,WIRE_4_PORT_D,WIRE_5_PORT_D,WIRE_6_PORT_D,WIRE_7_PORT_D,WIRE_8_PORT_D,WIRE_9_PORT_D,WIRE_10_PORT_D,WIRE_11_PORT_D,WIRE_12_PORT_D,WIRE_13_PORT_D,WIRE_14_PORT_D,WIRE_15_PORT_D,WIRE_16_PORT_D};
+byte pinsE[] = {0x00,WIRE_1_PORT_E,WIRE_2_PORT_E,WIRE_3_PORT_E,WIRE_4_PORT_E,WIRE_5_PORT_E,WIRE_6_PORT_E,WIRE_7_PORT_E,WIRE_8_PORT_E,WIRE_9_PORT_E,WIRE_10_PORT_E,WIRE_11_PORT_E,WIRE_12_PORT_E,WIRE_13_PORT_E,WIRE_14_PORT_E,WIRE_15_PORT_E,WIRE_16_PORT_E};
+byte pinsF[] = {0x00,WIRE_1_PORT_F,WIRE_2_PORT_F,WIRE_3_PORT_F,WIRE_4_PORT_F,WIRE_5_PORT_F,WIRE_6_PORT_F,WIRE_7_PORT_F,WIRE_8_PORT_F,WIRE_9_PORT_F,WIRE_10_PORT_F,WIRE_11_PORT_F,WIRE_12_PORT_F,WIRE_13_PORT_F,WIRE_14_PORT_F,WIRE_15_PORT_F,WIRE_16_PORT_F};
 #endif
 
 ISR(TIMER1_OVF_vect) {
+  #ifdef __AVR_ATmega328P__ // Arduino Duemilinova / Uno
   PORTB = 0x00;
   PORTC = 0x00;
   PORTD = 0x00;
+  #endif
+  #ifdef __AVR_ATmega32U4__ // Arduino Leonardo
+  PORTB = 0x00;
+  PORTC = 0x00;
+  PORTD = 0x00;
+  PORTE = 0x00;
+  PORTF = 0x00;
+  #endif 
+  
   
   int pin1 = _cube_current_frame->pin1;
   int pin2 = _cube_current_frame->pin2;
@@ -639,6 +654,7 @@ ISR(TIMER1_OVF_vect) {
   
   _cube_current_frame = _cube__frame + _cube_current_frame->next;
   
+  #ifdef __AVR_ATmega328P__ // Arduino Duemilinova / Uno 
   DDRB = pinsB[pin1] | pinsB[pin2];
   DDRC = pinsC[pin1] | pinsC[pin2];
   DDRD = pinsD[pin1] | pinsD[pin2];
@@ -646,6 +662,21 @@ ISR(TIMER1_OVF_vect) {
   PORTB = pinsB[pin1];
   PORTC = pinsC[pin1];
   PORTD = pinsD[pin1];
+  #endif
+  
+  #ifdef __AVR_ATmega32U4__ // Arduino Leonardo
+  DDRB = pinsB[pin1] | pinsB[pin2];
+  DDRC = pinsC[pin1] | pinsC[pin2];
+  DDRD = pinsD[pin1] | pinsD[pin2];
+  DDRE = pinsE[pin1] | pinsE[pin2];
+  DDRF = pinsF[pin1] | pinsF[pin2];
+  
+  PORTB = pinsB[pin1];
+  PORTC = pinsC[pin1];
+  PORTD = pinsD[pin1];
+  PORTE = pinsE[pin1];
+  PORTF = pinsF[pin1];
+  #endif
 
   setTimer1Value(0xFFFF - brightness);
 }
