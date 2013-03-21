@@ -111,16 +111,25 @@ void initCube() {
   _cube_current_frame->brightness=255;
   //END DEBUG
   
-  // Configure Interrupt for color display
-  setTimer2Prescaler(256);
-  enableTimer2OverflowInterrupt();
-  setTimer2Mode (TIMER2_NORMAL);
-  
+  // Configure Interrupt for Animation Progression
+  #ifdef __AVR_ATmega328P__
+    // If the arduino is a 328 chip use timer 2
+    setTimer2Prescaler(256);
+    enableTimer2OverflowInterrupt();
+    setTimer2Mode (TIMER2_NORMAL);
+  #endif
+  #ifdef __AVR_ATmega32U4__
+    // If the arduino is a 32U4 chip use timer 3
+    setTimer3Prescaler(256);
+    enableTimer3OverflowInterrupt();
+    setTimer3Mode (TIMER3_NORMAL);
+  #endif
   // Enable the brightness interrupt
   //enableTimer2CompareAInterrupt();
   //setTimer2OutputCompareA(0xFF);
   
-  // Configure Interrupt for Animation Progression
+    // Configure Interrupt for color display
+
   setTimer1Prescaler(8);
   enableTimer1OverflowInterrupt();
   setTimer1Mode (TIMER1_NORMAL);
@@ -324,6 +333,7 @@ void initCube() {
   //////////////////////////////////////////////////////////////////////////////
  ////////////////////////////// HELPER FUNCTIONS //////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
+
 
 /******************************** CLEAR BUFFER ********************************\
 | This function will clear the buffer that you can write to, this will allow   |
@@ -693,12 +703,26 @@ ISR(TIMER1_OVF_vect) {
 \******************************************************************************/
 int animationTimer = 0;
 int animationMax = 0;
-
+#ifdef __AVR_ATmega328P__
 ISR(TIMER2_OVF_vect) {
+#endif
+#ifdef __AVR_ATmega32U4__
+ISR(TIMER3_OVF_vect) {
+#endif
   animationTimer++;
   if (animationTimer == animationMax) {
     continuePattern = false;
     animationTimer=0;
   }  
+}
+
+void setAnimationTime(unsigned int maxValue) {
+  #ifdef __AVR_ATmega328P__
+    animationMax = maxValue; // prescaler 255 on a 8 bit timer
+  #endif
+  #ifdef __AVR_ATmega32U4__
+    animationMax = maxValue/256; // prescaler 255 on a 16 bit timer
+  #endif
+  
 }
 #endif
