@@ -53,8 +53,9 @@ int color = red;
 void setup() {
   initCube();
   
-  // Animation Max represents how many times timer2 should overflow before changing the animation
-  animationMax = 2550;
+  // Animation Max represents how many times the timer should trigger before
+  // Progressing to the next animation
+  setAnimationTime(2550);
 }
 void loop() {
   planarSpin();
