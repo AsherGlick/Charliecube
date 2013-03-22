@@ -125,22 +125,10 @@ void Timer3_setOutputCompareC(unsigned int value);
  ////////////////////////////// Timer 0 Functions /////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-/****************************** SET TIMER 0 MODE ******************************\
-| This function still needs some more work because i dont understand compleetly|
-| what each mode does                                                          |
-| Waveform Generation Mode Bit Description                                     |
-|                                                                              |
-| Mode|WGM2|WGM1|WGM0|Mode of Operation |TOP |Update OCRx at|TOV Flag set on   |
-| 0    0    0    0   |Normal            |0xFF| Immediate    |MAX               |
-| 1    0    0    1   |PWM, Phase Correct|0xFF| TOP          |BOTTOM            |
-| 2    0    1    0   |CTC               |OCRA| Immediate    |MAX               |
-| 3    0    1    1   |Fast PWM          |0xFF|BOTTOM        |MAX               |
-| 4    1    0    0   |Reserved          | –  | –            |–                 |
-| 5    1    0    1   |PWM, Phase Correct|OCRA| TOP          |BOTTOM            |
-| 6    1    1    0   |Reserved          |–   | –            | –                |
-| 7    1    1    1   |Fast PWM          |OCRA| BOTTOM       |TOP               |
+/******************************* TIMER0 SET MODE ******************************\
+| This function sets the mode of Timer 0 to one of the predefined modes set    |
+| by the processor                                                             |
 \******************************************************************************/
-
 #define TIMER0_NORMAL 0
 #define TIMER0_PWM_PHASE_CORRECT 1
 #define TIMER0_CTC 2
@@ -160,20 +148,42 @@ void Timer0_setMode (int mode) {
     // Top : 0xFF
     // Update OCRx at: TOP
     // TOV Flag set on: BOTTOM
-    TCCR0A |= (1<<WGM00);
+    TCCR0A |=  (1<<WGM00);
     TCCR0A &= ~(1<<WGM01);
     TCCR0B &= ~(1<<WGM02);
   }
-else if (mode == TIMER0_PWM_PHASE_CORRECT) {
-    // Top : 0xFF
+  else if (mode == TIMER0_CTC) {
+    // Top : OCRA
+    // Update OCRx at: Immediate
+    // TOV Flag set on: MAX
+    TCCR0A &= ~(1<<WGM00);
+    TCCR0A |=  (1<<WGM01);
+    TCCR0B &= ~(1<<WGM02);
+  }
+  else if (mode == TIMER0_FAST_PWM) {
+    // Top : 0XFF
+    // Update OCRx at: BOTTOM
+    // TOV Flag set on: MAX
+    TCCR0A |=  (1<<WGM00);
+    TCCR0A |=  (1<<WGM01);
+    TCCR0B &= ~(1<<WGM02);
+  }
+  else if (mode == TIMER0_PWM_PAHSE_CORRECT_OCRA_TOP) {
+    // Top : OCRA
+    // Update OCRx at: BOTTOM
+    // TOV Flag set on: TOP
+    TCCR0A |=  (1<<WGM00);
+    TCCR0A &= ~(1<<WGM01);
+    TCCR0B |=  (1<<WGM02);
+  }
+  else if (mode == TIMER0_FAST_PWM_OCRA_TOP) {
+    // Top : OCRA
     // Update OCRx at: TOP
     // TOV Flag set on: BOTTOM
-    TCCR0A |= (1<<WGM00);
-    TCCR0A &= ~(1<<WGM01);
-    TCCR0B &= ~(1<<WGM02);
+    TCCR0A |=  (1<<WGM00);
+    TCCR0A |=  (1<<WGM01);
+    TCCR0B |=  (1<<WGM02);
   }
-
-  
 }
 /**************************** SET TIMER 0 PRESCALER ***************************\
 | The timer 0 prescaler determines when the timer is incremented. If the       |
