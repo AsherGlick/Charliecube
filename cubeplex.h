@@ -113,7 +113,7 @@ void initCube() {
     Timer2_setPrescaler(256);
     Timer2_enableOverflowInterrupt();
     Timer2_setMode (TIMER2_NORMAL);
-  #elif #if defined(__AVR_ATmega32U4__)
+  #elif defined(__AVR_ATmega32U4__)
     // If the arduino is a 32U4 chip use Timer3
     Timer3_setPrescaler(256);
     Timer3_enableOverflowInterrupt();
@@ -662,7 +662,7 @@ ISR(TIMER1_OVF_vect) {
   PORTF = pinsF[pin1];
   #endif
 
-  setTimer1Value(0xFFFF - brightness);
+  Timer1_setValue(0xFFFF - brightness);
 }
 
 
@@ -677,7 +677,6 @@ int animationMax = 0;
 #endif
 // The advance animation interrupt
 ISR(TIMER_INTERRUPT_VECTOR) {
-#endif
   animationTimer++;
   if (animationTimer == animationMax) {
     continuePattern = false;
@@ -686,7 +685,7 @@ ISR(TIMER_INTERRUPT_VECTOR) {
 }
 
 void setAnimationTime(unsigned int maxValue) {
-  #ifdef defined(__AVR_ATmega328P__)
+  #if defined(__AVR_ATmega328P__)
     animationMax = maxValue; // prescaler 255 on a 8 bit timer
   #elif defined(__AVR_ATmega32U4__)
     animationMax = maxValue/256; // prescaler 255 on a 16 bit timer
