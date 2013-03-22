@@ -59,64 +59,67 @@
 #include "mappings.h"
 #include "niceTimer.h"
 
-struct _frame_light{
+struct charliecubeForegroundLed{
   unsigned char pin1;
   unsigned char pin2;
   unsigned int brightness;
   unsigned char next;
 };
 
-_frame_light * _cube__frame;  // Active_Buffer
-                              // Passive_Buffer
-_frame_light * _cube_current_frame;
-unsigned char * _cube_buffer;
+
+
+charliecubeForegroundLed * charliecubeForegroundBuffer;  // foreground buffer
+                              // background buffer
+
+charliecubeForegroundLed * charliecubeCurrentLED;
+unsigned char * charliecubeBackgroundBuffer;
 
 bool continuePattern = false;
 
   int SET_LED(int one, int two, int i) {
-    _cube__frame[i].pin1 = one;
-    _cube__frame[i].pin2 = two;
+    charliecubeForegroundBuffer[i].pin1 = one;
+    charliecubeForegroundBuffer[i].pin2 = two;
     return i+1;
   }
 
 /********************************** INIT CUBE *********************************\
 | This function will allocate the memory required for the LED cube buffers.    |
-| which is about 600bytes
+| which is about [needs to be recalculated]
 \******************************************************************************/
 void initCube() {
   Serial.begin(9600);
-  Serial.println(sizeof(_frame_light));
+  Serial.println(sizeof(charliecubeForegroundLed));
   Serial.println(sizeof(unsigned char));
   Serial.end();
-  _cube__frame = (_frame_light*)malloc(sizeof(_frame_light) * (BUFFERSIZE+1));
-  _cube_buffer = (unsigned char*)malloc(sizeof(unsigned char) * BUFFERSIZE);
+  charliecubeForegroundBuffer = (charliecubeForegroundLed*)malloc(sizeof(charliecubeForegroundLed) * (BUFFERSIZE+1));
+  charliecubeBackgroundBuffer = (unsigned char*)malloc(sizeof(unsigned char) * BUFFERSIZE);
   
   // ONLY NEEDED FOR DEBUGGING
-  // initilize the pins to not carry data over from the last build
+  // Initialize the pins to not carry data over from the last build
   for (int i = 0; i < 192; i++) {
-    _cube__frame[  i].pin1 = 0; _cube__frame[  i].pin2 = 0;
+    charliecubeForegroundBuffer[  i].pin1 = 0; charliecubeForegroundBuffer[  i].pin2 = 0;
   }
   // END ONLY NEEDED FOR DEBUGGING
 
   for (int i = 0; i < BUFFERSIZE; i++) {
-    _cube_buffer[i] = 0;
+    charliecubeBackgroundBuffer[i] = 0;
   }
 
-  // Initilize the 'OFF' LED of the list to start with an empty buffer
-  _cube_current_frame = _cube__frame+192; 
-  _cube_current_frame->pin1 = 0;
-  _cube_current_frame->pin2 = 0;
-  _cube_current_frame->next = 190;
-  _cube_current_frame->brightness=0;
+  // Initialize the 'OFF' LED of the list to start with an empty buffer
+  charliecubeCurrentLED = charliecubeForegroundBuffer+192; 
+  charliecubeCurrentLED->pin1 = 0;
+  charliecubeCurrentLED->pin2 = 0;
+  charliecubeCurrentLED->next = 190;
+  charliecubeCurrentLED->brightness=0;
 
   
   //DEBUG STATEMENT
-  _cube_current_frame = _cube__frame+191;
-  _cube_current_frame->next = 192;
-  _cube_current_frame->brightness=255;
-  _cube_current_frame = _cube__frame+190;
-  _cube_current_frame->next = 191;
-  _cube_current_frame->brightness=255;
+  charliecubeCurrentLED = charliecubeForegroundBuffer+191;
+  charliecubeCurrentLED->next = 192;
+  charliecubeCurrentLED->brightness=255;
+  charliecubeCurrentLED = charliecubeForegroundBuffer+190;
+  charliecubeCurrentLED->next = 191;
+  charliecubeCurrentLED->brightness=255;
   //END DEBUG
   
   // Configure Interrupt for Animation Progression
@@ -155,18 +158,18 @@ void initCube() {
 
 /******************************** CLEAR BUFFER ********************************\
 | This function will clear the buffer that you can write to, this will allow   |
-| you to draw an eniterly new frame int othe buffer
+| you to draw an entirely new frame int other buffer                           |
 \******************************************************************************/
 void clearBuffer () {
   for (int i = 0; i < BUFFERSIZE; i++) {
-    _cube_buffer[i] = 0;
+    charliecubeBackgroundBuffer[i] = 0;
   }
 }
 
 /**************************** NEXT COLOR FUNCTIONS ****************************\
-| These functions cycle thorugh                                                |
+| These functions cycle through                                                |
 |  the three primary colors red, greed, and blue                               |
-|  the secondary colors purple, teal, yellow (every pairing of two leds)       |
+|  the secondary colors purple, teal, yellow (every pairing of two LEDs)       |
 |  the ALL THE COLORS (red,green,blue,purple,teal,yellow,white)                |
 \******************************************************************************/
 int nextPrimaryColor(int color)   { return  (color+1)%3; }
@@ -175,7 +178,7 @@ int nextColor(int color)          { return  (color+1)%7; }
 
 /********************************** SWAP INT **********************************\
 | This function uses the fast xor swap to change the values of the two         |
-| intigers passed into the function                                            |
+| integers passed into the function                                            |
 \******************************************************************************/
 void swapint(int & one, int & two) {
   one = one^two;
@@ -184,8 +187,8 @@ void swapint(int & one, int & two) {
 }
 
 /******************************* ROUND CLOSTEST *******************************\
-| This function takes in a numberator and denominator and rounds to the        |
-| nearist number instead of trunkating. It does this by calculating an extra   |
+| This function takes in a numerator and denominator and rounds to the         |
+| nearest number instead of truncating. It does this by calculating an extra   |
 | digit (this function should be changes to be more accurate)                  |
 \******************************************************************************/
 int roundClostest(int numerator, int denominator) {
@@ -217,29 +220,28 @@ int roundClostest(int numerator, int denominator) {
 #define off -7
 
 /********************************** DRAW LED **********************************\
-| This function turns on leds at a specified position. Depending on which      |
+| This function turns on LEDs at a specified position. Depending on which      |
 | color this function turns on different colors of the LED                     |
 \******************************************************************************/
 void drawLed(int color, int brightness, int x, int y, int z) {
   
   if ((color/3)==0) { // single color (red green blue)
-  //_cube_buffer[(((color)%3)*64)+(x*16)+(y*4)+z] += brightness;
-    _cube_buffer[(((color)%3)*64)+(x*16)+(y*4)+z] += brightness;
-    _cube_buffer[(((color+1)%3)*64)+(x*16)+(y*4)+z] += 0;
+    charliecubeBackgroundBuffer[(((color)%3)*64)+(x*16)+(y*4)+z] += brightness;
+    //charliecubeBackgroundBuffer[(((color+1)%3)*64)+(x*16)+(y*4)+z] += 0;
   }
   else if ((color/3)==1) { // double color (teal yellow purple)
-    _cube_buffer[(((color)%3)*64)+(x*16)+(y*4)+z] += brightness;
-    _cube_buffer[(((color+1)%3)*64)+(x*16)+(y*4)+z] += brightness;
+    charliecubeBackgroundBuffer[(((color)%3)*64)+(x*16)+(y*4)+z] += brightness;
+    charliecubeBackgroundBuffer[(((color+1)%3)*64)+(x*16)+(y*4)+z] += brightness;
   }
   else if (color == 6){ // all colors (white)
-    _cube_buffer[((0)*64)+(x*16)+(y*4)+z] += brightness;
-    _cube_buffer[((1)*64)+(x*16)+(y*4)+z] += brightness;
-    _cube_buffer[((2)*64)+(x*16)+(y*4)+z] += brightness;
+    charliecubeBackgroundBuffer[((0)*64)+(x*16)+(y*4)+z] += brightness;
+    charliecubeBackgroundBuffer[((1)*64)+(x*16)+(y*4)+z] += brightness;
+    charliecubeBackgroundBuffer[((2)*64)+(x*16)+(y*4)+z] += brightness;
   }
   else if (color == -7) {
-    _cube_buffer[((0)*64)+(x*16)+(y*4)+z] = 0;
-    _cube_buffer[((1)*64)+(x*16)+(y*4)+z] = 0;
-    _cube_buffer[((2)*64)+(x*16)+(y*4)+z] = 0;
+    charliecubeBackgroundBuffer[((0)*64)+(x*16)+(y*4)+z] = 0;
+    charliecubeBackgroundBuffer[((1)*64)+(x*16)+(y*4)+z] = 0;
+    charliecubeBackgroundBuffer[((2)*64)+(x*16)+(y*4)+z] = 0;
   }
 }
 void drawLed(int color, int x, int y, int z) {
@@ -266,7 +268,7 @@ void drawBox(int color, int startx, int starty, int startz, int endx, int endy, 
   drawBox(color,255,startx,starty,startz,endx,endy,endz);
 }
 /******************************* DRAW HOLLOW BOX ******************************\
-| This function will draw the walls, celing, and floor of a defined box        |
+| This function will draw the walls, ceiling, and floor of a defined box       |
 \******************************************************************************/
 void drawHollowBox(int color, int brightness, int startx, int starty, int startz, int endx, int endy, int endz) {
   if (startx > endx) swapint(startx,endx);
@@ -311,7 +313,7 @@ void drawBoxOutline(int color, int startx, int starty, int startz, int endx, int
    drawHollowBox(color,255,startx,starty,startz,endx,endy,endz);
 }
 /******************************* DRAW BOX WALLS *******************************\
-| This function will draw the virtical walls and all four sides of a defined   |
+| This function will draw the vertical walls and all four sides of a defined   |
 | box                                                                          |
 \******************************************************************************/
 void drawBoxWalls(int color, int brightness, int startx, int starty, int startz, int endx, int endy, int endz) {
@@ -337,7 +339,7 @@ void drawBoxWalls(int color, int startx, int starty, int startz, int endx, int e
 }
 /********************************** DRAW LINE *********************************\
 | This function will attempt to draw a line between the two points given. Due  |
-| to the limited avalibility of pixels the best approximation is chosen for    |
+| to the limited availability of pixels the best approximation is chosen for   |
 | each pixel value                                                             |
 \******************************************************************************/
 void drawLine(int color, int brightness, int startx, int starty, int startz, int endx, int endy, int endz) {
@@ -385,43 +387,43 @@ unsigned int offtime; // how long the leds should be off per cycle
 /******************************** FLUSH BUFFER ********************************\
 | This takes the buffer frame and sets the display memory to match, because    |
 | the display memory needs to be faster it is split up into two arrays instead |
-| of just one. The display frame is actually a ciclic linked list which allows |
+| of just one. The display frame is actually a cyclic linked list which allows |
 | the program to just loop through and turn on the LEDs without the need to    |
-| check to see if it is at the end o  f the loop                                 |
+| check to see if it is at the end of the loop                                 |
 \******************************************************************************/
 
 void flushBuffer() {
-  _frame_light * previousActivatedFrame = _cube__frame+192; // Use this to determine if an led is on and how to handle inserting and deleting elements in the list
+  charliecubeForegroundLed * previousActivatedFrame = charliecubeForegroundBuffer+192; // Use this to determine if an led is on and how to handle inserting and deleting elements in the list
   //offtime = 0; // no longer set offtime to 0, all modifications will be done within the loop
   
   for (int i = 0; i < 192; i++) {
-    int newBrightness = _cube_buffer[i];
+    int newBrightness = charliecubeBackgroundBuffer[i];
     if (previousActivatedFrame->next == i) { // Previously On
-      int oldBrightness = _cube__frame[i].brightness;
+      int oldBrightness = charliecubeForegroundBuffer[i].brightness;
       if (newBrightness == 0) { // Turning Off
-        previousActivatedFrame->next = _cube__frame[i].next;// set previous's next to this's next
+        previousActivatedFrame->next = charliecubeForegroundBuffer[i].next;// set previous's next to this's next
         offtime -= 255-oldBrightness;// remove the brightness modification from offtime
       }
       else { // Staying On (with possible brightness change)
         offtime += oldBrightness - newBrightness;// Change the offtime variable based on the difference in brightnesses
-        _cube__frame[i].brightness = newBrightness;// Change the brightness value
-        previousActivatedFrame = _cube__frame+i; // Set this as the previousActivatedFrame
+        charliecubeForegroundBuffer[i].brightness = newBrightness;// Change the brightness value
+        previousActivatedFrame = charliecubeForegroundBuffer+i; // Set this as the previousActivatedFrame
       }
     }
     else { // Previously Off
       if (newBrightness == 0) {} // Staying Off (do nothing)
       else { // Turning On
         
-        _cube__frame[i].next = previousActivatedFrame->next;//Set this's next to the previous's next
-        _cube__frame[i].brightness = newBrightness; // set this brightness to the brightness value
+        charliecubeForegroundBuffer[i].next = previousActivatedFrame->next;//Set this's next to the previous's next
+        charliecubeForegroundBuffer[i].brightness = newBrightness; // set this brightness to the brightness value
         offtime += 255 - newBrightness;// modify the offtime based on the brightness
         previousActivatedFrame->next = i;// Set the the previous's mext to this
-        previousActivatedFrame = _cube__frame+i;// Set this as the previousActivatedFrame
+        previousActivatedFrame = charliecubeForegroundBuffer+i;// Set this as the previousActivatedFrame
       }
       
     }
   }
-  _cube__frame[192].brightness = offtime;
+  charliecubeForegroundBuffer[192].brightness = offtime;
 }
 
 
@@ -461,11 +463,11 @@ ISR(TIMER1_OVF_vect) {
   PORTF = 0x00;
   #endif 
   
-  int pin1 = _cube_current_frame->pin1;
-  int pin2 = _cube_current_frame->pin2;
-  int brightness = _cube_current_frame->brightness;
+  int pin1 = charliecubeCurrentLED->pin1;
+  int pin2 = charliecubeCurrentLED->pin2;
+  int brightness = charliecubeCurrentLED->brightness;
   
-  _cube_current_frame = _cube__frame + _cube_current_frame->next;
+  charliecubeCurrentLED = charliecubeForegroundBuffer + charliecubeCurrentLED->next;
   
   #ifdef __AVR_ATmega328P__ // Arduino Duemilinova / Uno 
   DDRB = pinsB[pin1] | pinsB[pin2];
