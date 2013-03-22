@@ -52,15 +52,13 @@
 | free to take it an use it for whatever you want. At some point I will make   |
 | documentation for it maybe (dont wait for it :P )                            |
 \******************************************************************************/
-
 #ifndef _NICE_TIMER_H_
 #define _NICE_TIMER_H_
-
-
 
   //////////////////////////////////////////////////////////////////////////////
  ////////////////////////////// TIMER FUNCTIONS /////////////////////////////// 
 //////////////////////////////////////////////////////////////////////////////  
+
 // Timer 0 Functions
 void Timer0_setMode (int mode);
 void Timer0_setPrescaler(int prescaler);
