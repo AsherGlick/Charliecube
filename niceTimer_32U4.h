@@ -52,6 +52,7 @@
 | free to take it an use it for whatever you want. At some point I will make   |
 | documentation for it maybe (dont wait for it :P )                            |
 \******************************************************************************/
+
 #ifndef _NICE_TIMER_H_
 #define _NICE_TIMER_H_
 
@@ -61,72 +62,64 @@
  ////////////////////////////// TIMER FUNCTIONS /////////////////////////////// 
 //////////////////////////////////////////////////////////////////////////////  
 // Timer 0 Functions
-
-void setTimer0Mode (int mode);
-void setTimer0Prescaler(int prescaler);
-void setTimer0Value(byte value);
-byte getTimer0Value(byte value);
-void setTimer0OutputCompareA(byte value);
-void setTimer0OutputCompareB(byte value);
-
-void enableTimer0CompareAInterrupt();
-void disableTimer0CompareAInterrupt();
-void enableTimer0CompareBInterrupt();
-void disableTimer0CompareBInterrupt();
-void enableTimer0OverflowInterrupt();
-void disableTimer0OverflowInterrupt();
-
+void Timer0_setMode (int mode);
+void Timer0_setPrescaler(int prescaler);
+void Timer0_setValue(byte value);
+byte Timer0_getValue(byte value);
+void Timer0_setOutputCompareA(byte value);
+void Timer0_setOutputCompareB(byte value);
+void Timer0_enableCompareAInterrupt();
+void Timer0_disableCompareAInterrupt();
+void Timer0_enableCompareBInterrupt();
+void Timer0_disableCompareBInterrupt();
+void Timer0_enableOverflowInterrupt();
+void Timer0_disableOverflowInterrupt();
 // Timer 1 Functions
-void enableTimer1CompareAInterrupt();
-void disableTimer1CompareAInterrupt();
-void enableTimer1CompareBInterrupt();
-void disableTimer1CompareBInterrupt();
-void enableTimer1CompareCInterrupt();
-void disableTimer1CompareCInterrupt();
-void enableTimer1OverflowInterrupt();
-void disableTimer1OverflowInterrupt();
-
-void setTimer1Mode (int mode);
-void setTimer1Prescaler(int prescaler);
-void setTimer1Value(unsigned int value);
-unsigned int getTimer1Value();
-void setTimer1OutputCompareA(unsigned int value);
-void setTimer1OutputCompareB(unsigned int value);
-void setTimer1OutputCompareC(unsigned int value);
+void Timer1_enableCompareAInterrupt();
+void Timer1_disableCompareAInterrupt();
+void Timer1_enableCompareBInterrupt();
+void Timer1_disableCompareBInterrupt();
+void Timer1_enableCompareCInterrupt();
+void Timer1_disableCompareCInterrupt();
+void Timer1_enableOverflowInterrupt();
+void Timer1_disableOverflowInterrupt();
+void Timer1_setMode (int mode);
+void Timer1_setPrescaler(int prescaler);
+void Timer1_setValue(unsigned int value);
+unsigned int Timer1_getValue();
+void Timer1_setOutputCompareA(unsigned int value);
+void Timer1_setOutputCompareB(unsigned int value);
+void Timer1_setOutputCompareC(unsigned int value);
 // Timer 2 Does not exist
-
 // TImer 3 Functions
-void enableTimer3CompareAInterrupt();
-void disableTimer3CompareAInterrupt();
-void enableTimer3CompareBInterrupt();
-void disableTimer3CompareBInterrupt();
-void enableTimer3CompareCInterrupt();
-void disableTimer3CompareCInterrupt();
-void enableTimer3OverflowInterrupt();
-void disableTimer3OverflowInterrupt();
-
-void setTimer3Mode (int mode);
-void setTimer3Prescaler(int prescaler);
-void setTimer3Value(unsigned int value);
-unsigned int getTimer3Value();
-void setTimer3OutputCompareA(unsigned int value);
-void setTimer3OutputCompareB(unsigned int value);
-void setTimer3OutputCompareC(unsigned int value);
-
+void Timer3_enableCompareAInterrupt();
+void Timer3_disableCompareAInterrupt();
+void Timer3_enableCompareBInterrupt();
+void Timer3_disableCompareBInterrupt();
+void Timer3_enableCompareCInterrupt();
+void Timer3_disableCompareCInterrupt();
+void Timer3_enableOverflowInterrupt();
+void Timer3_disableOverflowInterrupt();
+void Timer3_setMode (int mode);
+void Timer3_setPrescaler(int prescaler);
+void Timer3_setValue(unsigned int value);
+unsigned int Timer3_getValue();
+void Timer3_setOutputCompareA(unsigned int value);
+void Timer3_setOutputCompareB(unsigned int value);
+void Timer3_setOutputCompareC(unsigned int value);
 // Timer 4 Functions
-void enableTimer2CompareAInterrupt();
-void disableTimer2CompareAInterrupt();
-void enableTimer2CompareBInterrupt();
-void disableTimer2CompareBInterrupt();
-void enableTimer2OverflowInterrupt();
-void disableTimer2OverflowInterrupt();
-
-void setTimer2Mode (int mode);
-void setTimer2Prescaler(int prescaler);
-void setTimer2Value(byte value);
-byte getTimer2Value();
-void setTimer2OutputCompareA(byte value);
-void setTimer2OutputCompareB(byte value);
+// void enableTimer2CompareAInterrupt();
+// void disableTimer2CompareAInterrupt();
+// void enableTimer2CompareBInterrupt();
+// void disableTimer2CompareBInterrupt();
+// void enableTimer2OverflowInterrupt();
+// void disableTimer2OverflowInterrupt();
+// void setTimer2Mode (int mode);
+// void setTimer2Prescaler(int prescaler);
+// void setTimer2Value(byte value);
+// byte getTimer2Value();
+// void setTimer2OutputCompareA(byte value);
+// void setTimer2OutputCompareB(byte value);
 
   //////////////////////////////////////////////////////////////////////////////
  ////////////////////////////// Timer 0 Functions /////////////////////////////
@@ -147,12 +140,40 @@ void setTimer2OutputCompareB(byte value);
 | 6    1    1    0   |Reserved          |–   | –            | –                |
 | 7    1    1    1   |Fast PWM          |OCRA| BOTTOM       |TOP               |
 \******************************************************************************/
+
 #define TIMER0_NORMAL 0
-void setTimer0Mode (int mode) {
-  if (mode == 0) {
-    TCCR0A &= ~((1<<WGM01) | (1<<WGM00));
+#define TIMER0_PWM_PHASE_CORRECT 1
+#define TIMER0_CTC 2
+#define TIMER0_FAST_PWM 3
+#define TIMER0_PWM_PAHSE_CORRECT_OCRA_TOP 5
+#define TIMER0_FAST_PWM_OCRA_TOP 6
+void Timer0_setMode (int mode) {
+  if (mode == TIMER0_NORMAL) {
+    // Top : 0xFF
+    // Update OCRx at: Immediate
+    // TOV Flag set on: MAX
+    TCCR0A &= ~(1<<WGM00);
+    TCCR0A &= ~(1<<WGM01);
     TCCR0B &= ~(1<<WGM02);
   }
+  else if (mode == TIMER0_PWM_PHASE_CORRECT) {
+    // Top : 0xFF
+    // Update OCRx at: TOP
+    // TOV Flag set on: BOTTOM
+    TCCR0A |= (1<<WGM00);
+    TCCR0A &= ~(1<<WGM01);
+    TCCR0B &= ~(1<<WGM02);
+  }
+else if (mode == TIMER0_PWM_PHASE_CORRECT) {
+    // Top : 0xFF
+    // Update OCRx at: TOP
+    // TOV Flag set on: BOTTOM
+    TCCR0A |= (1<<WGM00);
+    TCCR0A &= ~(1<<WGM01);
+    TCCR0B &= ~(1<<WGM02);
+  }
+
+  
 }
 /**************************** SET TIMER 0 PRESCALER ***************************\
 | The timer 0 prescaler determines when the timer is incremented. If the       |
@@ -161,7 +182,7 @@ void setTimer0Mode (int mode) {
 | this is you are trying to get small accurate numbers or large less acurate   |
 | numbers from a timer                                                         |
 \******************************************************************************/
-void setTimer0Prescaler(int prescaler) {
+void Timer0_setPrescaler(int prescaler) {
   TCCR0B &= B11111000; 
   if (prescaler == 0)         TCCR0B |= (0<<CS02) | (0<<CS01) | (0<<CS00);
   else if (prescaler == 1)    TCCR0B |= (0<<CS02) | (0<<CS01) | (1<<CS00);
@@ -175,22 +196,22 @@ void setTimer0Prescaler(int prescaler) {
 /**************************** TIMER 0 DIRECT ACCESS ***************************\
 | Set or get the current value for timer0                                      |
 \******************************************************************************/
-void setTimer0Value(byte value) {TCNT0 = value;}
-byte getTimer0Value()           {return TCNT0; }
+void Timer0_setValue(byte value) {TCNT0 = value;}
+byte Timer0_getValue()           {return TCNT0; }
 
 /************************ SET TIMER 0 OUTPUT COMPARE A ************************\
 | The Output Compare Register A contains an 8-bit value that is continuously   |
 | compared with the counter value (TCNT0). A match can be used to generate an  |
 | Output Compare interrupt, or to generate a waveform output on the OC0A pin.  |
 \******************************************************************************/
-void setTimer0OutputCompareA(byte value) { OCR0A = value; }
+void Timer0_setOutputCompareA(byte value) { OCR0A = value; }
 
 /************************ SET TIMER 0 OUTPUT COMPARE B ************************\
 | The Output Compare Register B contains an 8-bit value that is continuously   |
 | compared with the counter value (TCNT0). A match can be used to generate an  |
 | Output Compare interrupt, or to generate a waveform output on the OC0B pin.  |
 \******************************************************************************/
-void setTimer0OutputCompareB(byte value) { OCR0B = value; }
+void Timer0_setOutputCompareB(byte value) { OCR0B = value; }
 
 
 
@@ -203,22 +224,22 @@ void setTimer0OutputCompareB(byte value) { OCR0B = value; }
 | These two functions will enable or disable the timer 0 compare A interrupt.  |
 | Overflow Compare Interrupt Enable 0 A  is register (OCIE0A)                  |
 \******************************************************************************/
-void enableTimer0CompareAInterrupt()  { TIMSK0 |=  (1<<OCIE0A); }
-void disableTimer0CompareAInterrupt() { TIMSK0 &= ~(1<<OCIE0A);}
+void Timer0_enableCompareAInterrupt()  { TIMSK0 |=  (1<<OCIE0A); }
+void Timer0_disable0CompareAInterrupt() { TIMSK0 &= ~(1<<OCIE0A);}
 
 /***************** ENABLE/DISABLE TIMER 0 COMPARE B INTERRUPT *****************\
 | These two functions will enable or disable the timer 0 compare B interrupt.  |
 | Overflow Compare Interrupt Enable 0 B is register (OCIE0B)                   |
 \******************************************************************************/
-void enableTimer0CompareBInterrupt()  { TIMSK0 |=  (1<<OCIE0B); }
-void disableTimer0CompareBInterrupt() { TIMSK0 &= !(1<<OCIE0B); }
+void Timer0_enableCompareBInterrupt()  { TIMSK0 |=  (1<<OCIE0B); }
+void Timer0_disableCompareBInterrupt() { TIMSK0 &= !(1<<OCIE0B); }
 
 /****************** ENABLE/DISABLE TIMER 0 OVERFLOW INTERRUPT *****************\
 | These two functions will enable or disable the timer 0 overflow interrupt    |
 | Timer Overflow Interrupt Enable 0  is register (TOIE0)                       |
 \******************************************************************************/
-void enableTimer0OverflowInterrupt()  { TIMSK0 |=  (1<<TOIE0); }
-void disableTimer0OverflowInterrupt() { TIMSK0 &= ~(1<<TOIE0); }
+void Timer0_enableOverflowInterrupt()  { TIMSK0 |=  (1<<TOIE0); }
+void Timer0_disableOverflowInterrupt() { TIMSK0 &= ~(1<<TOIE0); }
 
   //////////////////////////////////////////////////////////////////////////////
  ////////////////////////////// Timer 1 Functions /////////////////////////////
@@ -233,7 +254,7 @@ void disableTimer0OverflowInterrupt() { TIMSK0 &= ~(1<<TOIE0); }
 | 
 \******************************************************************************/
 #define TIMER1_NORMAL 0
-void setTimer1Mode (int mode) {
+void Timer1_setMode (int mode) {
   if (mode == 0) {
     TCCR1A &= ~((1<<WGM11) | (1<<WGM10));
     TCCR1B &= ~((1<<WGM12) | (1<<WGM13));
@@ -246,7 +267,7 @@ void setTimer1Mode (int mode) {
 | this is you are trying to get small accurate numbers or large less acurate   |
 | numbers from a timer                                                         |
 \******************************************************************************/
-void setTimer1Prescaler(int prescaler) {
+void Timer1_setPrescaler(int prescaler) {
   TCCR1B &= B11111000; 
   if (prescaler == 0)          TCCR1B |= (0<<CS12) | (0<<CS11) | (0<<CS10);
   else if (prescaler == 1)     TCCR1B |= (0<<CS12) | (0<<CS11) | (1<<CS10);
@@ -260,29 +281,29 @@ void setTimer1Prescaler(int prescaler) {
 /**************************** TIMER 1 DIRECT ACCESS ***************************\
 | Set or get the current value for timer1                                      |
 \******************************************************************************/
-void setTimer1Value(unsigned int value) {TCNT1 = value;}
-unsigned int getTimer1Value()           {return TCNT1; }
+void Timer1_setValue(unsigned int value) {TCNT1 = value;}
+unsigned int TIMER1_getTimer1Value()           {return TCNT1; }
 
 /************************ SET TIMER 1 OUTPUT COMPARE A ************************\
 | The Output Compare Register A contains an 8-bit value that is continuously   |
 | compared with the counter value (TCNT1). A match can be used to generate an  |
 | Output Compare interrupt, or to generate a waveform output on the OC0A pin.  |
 \******************************************************************************/
-void setTimer1OutputCompareA(unsigned int value) { OCR1A = value; }
+void Timer1_setOutputCompareA(unsigned int value) { OCR1A = value; }
 
 /************************ SET TIMER 1 OUTPUT COMPARE B ************************\
 | The Output Compare Register B contains an 8-bit value that is continuously   |
 | compared with the counter value (TCNT1). A match can be used to generate an  |
 | Output Compare interrupt, or to generate a waveform output on the OC0B pin.  |
 \******************************************************************************/
-void setTimer1OutputCompareB(unsigned int value) { OCR1B = value; }
+void Timer1_setOutputCompareB(unsigned int value) { OCR1B = value; }
 
 /************************ SET TIMER 1 OUTPUT COMPARE C ************************\
 | The Output Compare Register C contains an 8-bit value that is continuously   |
 | compared with the counter value (TCNT1). A match can be used to generate an  |
 | Output Compare interrupt, or to generate a waveform output on the OC0C pin.  |
 \******************************************************************************/
-void setTimer1OutputCompareC(unsigned int value) { OCR1C = value; }
+void Timer1_setOutputCompareC(unsigned int value) { OCR1C = value; }
 
 
   //////////////////////////////////////////////////////////////////////////////
@@ -293,29 +314,29 @@ void setTimer1OutputCompareC(unsigned int value) { OCR1C = value; }
 | These two functions will enable or disable the timer 1 compare A interrupt.  |
 | Overflow Compare Interrupt Enable 1 A  is register (OCIE0A)                  |
 \******************************************************************************/
-void enableTimer1CompareAInterrupt()  { TIMSK1 |=  (1<<OCIE1A); }
-void disableTimer1CompareAInterrupt() { TIMSK1 &= ~(1<<OCIE1A);}
+void Timer1_enableCompareAInterrupt()  { TIMSK1 |=  (1<<OCIE1A); }
+void Timer1_disableCompareAInterrupt() { TIMSK1 &= ~(1<<OCIE1A);}
 
 /***************** ENABLE/DISABLE TIMER 1 COMPARE B INTERRUPT *****************\
 | These two functions will enable or disable the timer 0 compare B interrupt.  |
 | Overflow Compare Interrupt Enable 1 B is register (OCIE1B)                   |
 \******************************************************************************/
-void enableTimer1CompareBInterrupt()  { TIMSK1 |=  (1<<OCIE1B); }
-void disableTimer1CompareBInterrupt() { TIMSK1 &= !(1<<OCIE1B); }
+void Timer1_enableCompareBInterrupt()  { TIMSK1 |=  (1<<OCIE1B); }
+void Timer1_disableCompareBInterrupt() { TIMSK1 &= !(1<<OCIE1B); }
 
 /***************** ENABLE/DISABLE TIMER 1 COMPARE C INTERRUPT *****************\
 | These two functions will enable or disable the timer 0 compare C interrupt.  |
 | Overflow Compare Interrupt Enable 1 C is register (OCIE1B)                   |
 \******************************************************************************/
-void enableTimer1CompareCInterrupt()  { TIMSK1 |=  (1<<OCIE1C); }
-void disableTimer1CompareCInterrupt() { TIMSK1 &= !(1<<OCIE1C); }
+void Timer1_enableCompareCInterrupt()  { TIMSK1 |=  (1<<OCIE1C); }
+void Timer1_disableCompareCInterrupt() { TIMSK1 &= !(1<<OCIE1C); }
 
 /****************** ENABLE/DISABLE TIMER 1 OVERFLOW INTERRUPT *****************\
 | These two functions will enable or disable the timer 1 overflow interrupt    |
 | Timer Overflow Interrupt Enable 1  is register (TOIE1)                       |
 \******************************************************************************/
-void enableTimer1OverflowInterrupt()  { TIMSK1 |=  (1<<TOIE1); }
-void disableTimer1OverflowInterrupt() { TIMSK1 &= ~(1<<TOIE1); }
+void Timer1_enableOverflowInterrupt()  { TIMSK1 |=  (1<<TOIE1); }
+void Timer1_disableOverflowInterrupt() { TIMSK1 &= ~(1<<TOIE1); }
 
 
 
@@ -329,7 +350,7 @@ void disableTimer1OverflowInterrupt() { TIMSK1 &= ~(1<<TOIE1); }
 | 
 \******************************************************************************/
 #define TIMER3_NORMAL 0
-void setTimer3Mode (int mode) {
+void Timer3_setMode (int mode) {
   if (mode == 0) {
     TCCR3A &= ~((1<<WGM31) | (1<<WGM30));
     TCCR3B &= ~((1<<WGM32) | (1<<WGM33));
@@ -342,7 +363,7 @@ void setTimer3Mode (int mode) {
 | this is you are trying to get small accurate numbers or large less acurate   |
 | numbers from a timer                                                         |
 \******************************************************************************/
-void setTimer3Prescaler(int prescaler) {
+void Timer3_setPrescaler(int prescaler) {
   TCCR3B &= B11111000; 
   if (prescaler == 0)          TCCR3B |= (0<<CS32) | (0<<CS31) | (0<<CS30);
   else if (prescaler == 1)     TCCR3B |= (0<<CS32) | (0<<CS31) | (1<<CS30);
@@ -356,29 +377,29 @@ void setTimer3Prescaler(int prescaler) {
 /**************************** TIMER 3 DIRECT ACCESS ***************************\
 | Set or get the current value for timer3                                      |
 \******************************************************************************/
-void setTimer3Value(unsigned int value) {TCNT3 = value;}
-unsigned int getTimer3Value()           {return TCNT3; }
+void Timer3_setTimer3Value(unsigned int value) {TCNT3 = value;}
+unsigned int Timer3_getValue()           {return TCNT3; }
 
 /************************ SET TIMER 3 OUTPUT COMPARE A ************************\
 | The Output Compare Register A contains an 8-bit value that is continuously   |
 | compared with the counter value (TCNT3). A match can be used to generate an  |
 | Output Compare interrupt, or to generate a waveform output on the OC0A pin.  |
 \******************************************************************************/
-void setTimer3OutputCompareA(unsigned int value) { OCR3A = value; }
+void Timer3_setOutputCompareA(unsigned int value) { OCR3A = value; }
 
 /************************ SET TIMER 3 OUTPUT COMPARE B ************************\
 | The Output Compare Register B contains an 8-bit value that is continuously   |
 | compared with the counter value (TCNT3). A match can be used to generate an  |
 | Output Compare interrupt, or to generate a waveform output on the OC0B pin.  |
 \******************************************************************************/
-void setTimer3OutputCompareB(unsigned int value) { OCR3B = value; }
+void Timer3_setOutputCompareB(unsigned int value) { OCR3B = value; }
 
 /************************ SET TIMER 3 OUTPUT COMPARE C ************************\
 | The Output Compare Register C contains an 8-bit value that is continuously   |
 | compared with the counter value (TCNT3). A match can be used to generate an  |
 | Output Compare interrupt, or to generate a waveform output on the OC0C pin.  |
 \******************************************************************************/
-void setTimer3OutputCompareC(unsigned int value) { OCR3C = value; }
+void Timer3_setOutputCompareC(unsigned int value) { OCR3C = value; }
 
 
   //////////////////////////////////////////////////////////////////////////////
@@ -389,29 +410,29 @@ void setTimer3OutputCompareC(unsigned int value) { OCR3C = value; }
 | These two functions will enable or disable the timer 3 compare A interrupt.  |
 | Overflow Compare Interrupt Enable 3 A  is register (OCIE0A)                  |
 \******************************************************************************/
-void enableTimer3CompareAInterrupt()  { TIMSK3 |=  (1<<OCIE3A); }
-void disableTimer3CompareAInterrupt() { TIMSK3 &= ~(1<<OCIE3A);}
+void Timer3_enableCompareAInterrupt()  { TIMSK3 |=  (1<<OCIE3A); }
+void Timer3_disableCompareAInterrupt() { TIMSK3 &= ~(1<<OCIE3A);}
 
 /***************** ENABLE/DISABLE TIMER 3 COMPARE B INTERRUPT *****************\
 | These two functions will enable or disable the timer 0 compare B interrupt.  |
 | Overflow Compare Interrupt Enable 3 B is register (OCIE3B)                   |
 \******************************************************************************/
-void enableTimer3CompareBInterrupt()  { TIMSK3 |=  (1<<OCIE3B); }
-void disableTimer3CompareBInterrupt() { TIMSK3 &= !(1<<OCIE3B); }
+void Timer3_enableCompareBInterrupt()  { TIMSK3 |=  (1<<OCIE3B); }
+void Timer3_disableCompareBInterrupt() { TIMSK3 &= !(1<<OCIE3B); }
 
 /***************** ENABLE/DISABLE TIMER 3 COMPARE C INTERRUPT *****************\
 | These two functions will enable or disable the timer 0 compare C interrupt.  |
 | Overflow Compare Interrupt Enable 3 C is register (OCIE3B)                   |
 \******************************************************************************/
-void enableTimer3CompareCInterrupt()  { TIMSK3 |=  (1<<OCIE3C); }
-void disableTimer3CompareCInterrupt() { TIMSK3 &= !(1<<OCIE3C); }
+void Timer3_enableCompareCInterrupt()  { TIMSK3 |=  (1<<OCIE3C); }
+void Timer3_disableCompareCInterrupt() { TIMSK3 &= !(1<<OCIE3C); }
 
 /****************** ENABLE/DISABLE TIMER 3 OVERFLOW INTERRUPT *****************\
 | These two functions will enable or disable the timer 3 overflow interrupt    |
 | Timer Overflow Interrupt Enable 3  is register (TOIE3)                       |
 \******************************************************************************/
-void enableTimer3OverflowInterrupt()  { TIMSK3 |=  (1<<TOIE3); }
-void disableTimer3OverflowInterrupt() { TIMSK3 &= ~(1<<TOIE3); }
+void Timer3_enableOverflowInterrupt()  { TIMSK3 |=  (1<<TOIE3); }
+void Timer3_disableOverflowInterrupt() { TIMSK3 &= ~(1<<TOIE3); }
 
 
 
