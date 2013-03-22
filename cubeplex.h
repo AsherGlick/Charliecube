@@ -47,12 +47,13 @@
 #ifndef _CUBEPLEX_H_
 #define _CUBEPLEX_H_
 
-#define BUFFERSIZE 192
+#define BUFFERSIZE 192 // Defined size of LED buffer
 
+// Include the Arduino libraries in the source
 #if defined(ARDUINO) && ARDUINO >= 100
-  #include "Arduino.h"    // for digitalRead, digitalWrite, etc
+  #include "Arduino.h"  // For Arduino version 1.x
 #else
-  #include "WProgram.h"
+  #include "WProgram.h" // For Arduino version 0.x
 #endif
 
 #include "mappings.h"
@@ -65,7 +66,8 @@ struct _frame_light{
   unsigned char next;
 };
 
-_frame_light * _cube__frame;
+_frame_light * _cube__frame;  // Active_Buffer
+                              // Passive_Buffer
 _frame_light * _cube_current_frame;
 unsigned char * _cube_buffer;
 
@@ -87,10 +89,9 @@ void initCube() {
   for (int i = 0; i < BUFFERSIZE; i++) {
     _cube_buffer[i] = 0;
   }
-  //_cube__frame->next = _cube__frame;
-  //_cube__frame->pin1=0;
-  //_cube__frame->pin2=0;
-  _cube_current_frame = _cube__frame+192; // Set the first frame to the 'off' led
+
+  // Initilize the 'OFF' LED of the list to start with an empty buffer
+  _cube_current_frame = _cube__frame+192; 
   _cube_current_frame->pin1 = 0;
   _cube_current_frame->pin2 = 0;
   _cube_current_frame->next = 190;
@@ -98,44 +99,33 @@ void initCube() {
 
   
   //DEBUG STATEMENT
-  _cube_current_frame = _cube__frame+191; // Set the first frame to the 'off' led
-  //_cube_current_frame->pin1 = 16;
-  //_cube_current_frame->pin2 = 4;
+  _cube_current_frame = _cube__frame+191;
   _cube_current_frame->next = 192;
   _cube_current_frame->brightness=255;
-  
-  _cube_current_frame = _cube__frame+190; // Set the first frame to the 'off' led
-  //_cube_current_frame->pin1 = 12;
-  //_cube_current_frame->pin2 = 16;
+  _cube_current_frame = _cube__frame+190;
   _cube_current_frame->next = 191;
   _cube_current_frame->brightness=255;
   //END DEBUG
   
   // Configure Interrupt for Animation Progression
-  #ifdef __AVR_ATmega328P__
-    // If the arduino is a 328 chip use timer 2
-    setTimer2Prescaler(256);
-    enableTimer2OverflowInterrupt();
-    setTimer2Mode (TIMER2_NORMAL);
+  #if defined(__AVR_ATmega328P__)
+    // If the arduino is a 328 chip use Timer2
+    Timer2_setPrescaler(256);
+    Timer2_enableOverflowInterrupt();
+    Timer2_setMode (TIMER2_NORMAL);
+  #elif #if defined(__AVR_ATmega32U4__)
+    // If the arduino is a 32U4 chip use Timer3
+    Timer3_setPrescaler(256);
+    Timer3_enableOverflowInterrupt();
+    Timer3_setMode (TIMER3_NORMAL);
   #endif
-  #ifdef __AVR_ATmega32U4__
-    // If the arduino is a 32U4 chip use timer 3
-    setTimer3Prescaler(256);
-    enableTimer3OverflowInterrupt();
-    setTimer3Mode (TIMER3_NORMAL);
-  #endif
-  // Enable the brightness interrupt
-  //enableTimer2CompareAInterrupt();
-  //setTimer2OutputCompareA(0xFF);
-  
-    // Configure Interrupt for color display
 
-  setTimer1Prescaler(8);
-  enableTimer1OverflowInterrupt();
-  setTimer1Mode (TIMER1_NORMAL);
-  //enableTimer1CompareAInterrupt();
-  //setTimer1OutputCompareA(0x00FF);
-  
+  // Configure Interrupt for color display
+  Timer1_setPrescaler(8);
+  Timer1_enableOverflowInterrupt();
+  Timer1_setMode (TIMER1_NORMAL);
+
+  // Assign all the pin mappings to the display buffer  
   _cube__frame[  0].pin1 =  4; _cube__frame[  0].pin2 =  8;
   _cube__frame[  1].pin1 = 16; _cube__frame[  1].pin2 =  4;
   _cube__frame[  2].pin1 = 12; _cube__frame[  2].pin2 = 16;
@@ -333,7 +323,6 @@ void initCube() {
   //////////////////////////////////////////////////////////////////////////////
  ////////////////////////////// HELPER FUNCTIONS //////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-
 
 /******************************** CLEAR BUFFER ********************************\
 | This function will clear the buffer that you can write to, this will allow   |
@@ -562,20 +551,8 @@ void drawLine(int color, int startx, int starty, int startz, int endx, int endy,
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////////// DISPLAY //////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-int pwmm = 0;
 unsigned int offtime; // how long the leds should be off per cycle
-/*void flushElement(_frame_light* &copy_frame,int pin1,int pin2,unsigned int brightness) {
-  pin1--;
-  pin2--;
-  
-  (copy_frame+1)->next=copy_frame;
-  copy_frame++;
-  copy_frame->pin1=pin1;// | ( brightness & 0xF0);
-  copy_frame->pin2=pin2;// | ((brightness & 0x0F) << 4);
-  //brightness = 8;
-  copy_frame->brightness = 65535 - brightness; // 
-  offtime += 255-brightness;
-}*/
+
 /******************************** FLUSH BUFFER ********************************\
 | This takes the buffer frame and sets the display memory to match, because    |
 | the display memory needs to be faster it is split up into two arrays instead |
@@ -615,15 +592,13 @@ void flushBuffer() {
       
     }
   }
-  // After finishing creating the new LEDs and removing the old ones set the brightness of the off LED
-  //if (offtime == 0) {
-  //  _cube__frame[191].brightness = 255;
-  //}
-  //else {
-    _cube__frame[192].brightness = offtime;
-  //}
-  //flushElement(copy_frame,17,17,offtime); // Include time that the leds are off
+  _cube__frame[192].brightness = offtime;
 }
+
+
+  //////////////////////////////////////////////////////////////////////////////
+ /////////////////////////// INTERRUPT DEFINITIONS //////////////////////////// 
+//////////////////////////////////////////////////////////////////////////////  
 
 
 /*************************** INTERRUPT DISPLAY LEDS ***************************\
@@ -656,7 +631,6 @@ ISR(TIMER1_OVF_vect) {
   PORTE = 0x00;
   PORTF = 0x00;
   #endif 
-  
   
   int pin1 = _cube_current_frame->pin1;
   int pin2 = _cube_current_frame->pin2;
@@ -691,23 +665,18 @@ ISR(TIMER1_OVF_vect) {
   setTimer1Value(0xFFFF - brightness);
 }
 
-/******************************************************************************\
-| Some helpfull info for overflowing timers with different prescaler values    |
-|  16000000 / (   1*256) = 16000000 / 256    =  62500 Hz                       |
-|  16000000 / (   8*256) = 16000000 / 2048   =  ~7812 Hz                       |
-|  16000000 / (  32*256) = 16000000 / 8192   =  ~1953 Hz                       |
-|  16000000 / (  64*256) = 16000000 / 16384  =   ~976 Hz                       |
-|  16000000 / ( 128*256) = 16000000 / 32768  =   ~488 Hz                       | 
-|  16000000 / ( 256*256) = 16000000 / 65536  =   ~244 Hz                       |
-|  16000000 / (1024*256) = 16000000 / 262144 =    ~61 Hz                       |
-\******************************************************************************/
+
+// Allocate the current time and the maximum time variables
 int animationTimer = 0;
 int animationMax = 0;
-#ifdef __AVR_ATmega328P__
-ISR(TIMER2_OVF_vect) {
+// Detect the correct interrupt to trigger on based on chip
+#if defined(__AVR_ATmega328P__)
+  #define TIMER_INTERRUPT_VECTOR TIMER2_OVF_vect
+#elif defined(__AVR_ATmega32U4__)
+  #define TIMER_INTERRUPT_VECTOR TIMER3_OVF_vect
 #endif
-#ifdef __AVR_ATmega32U4__
-ISR(TIMER3_OVF_vect) {
+// The advance animation interrupt
+ISR(TIMER_INTERRUPT_VECTOR) {
 #endif
   animationTimer++;
   if (animationTimer == animationMax) {
@@ -717,10 +686,9 @@ ISR(TIMER3_OVF_vect) {
 }
 
 void setAnimationTime(unsigned int maxValue) {
-  #ifdef __AVR_ATmega328P__
+  #ifdef defined(__AVR_ATmega328P__)
     animationMax = maxValue; // prescaler 255 on a 8 bit timer
-  #endif
-  #ifdef __AVR_ATmega32U4__
+  #elif defined(__AVR_ATmega32U4__)
     animationMax = maxValue/256; // prescaler 255 on a 16 bit timer
   #endif
   
