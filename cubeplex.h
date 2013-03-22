@@ -73,19 +73,31 @@ unsigned char * _cube_buffer;
 
 bool continuePattern = false;
 
+  int SET_LED(int one, int two, int i) {
+    _cube__frame[i].pin1 = one;
+    _cube__frame[i].pin2 = two;
+    return i+1;
+  }
+
 /********************************** INIT CUBE *********************************\
 | This function will allocate the memory required for the LED cube buffers.    |
 | which is about 600bytes
 \******************************************************************************/
 void initCube() {
   Serial.begin(9600);
-  Serial.print(sizeof(_frame_light));
-  Serial.print(sizeof(unsigned char));
+  Serial.println(sizeof(_frame_light));
+  Serial.println(sizeof(unsigned char));
   Serial.end();
   _cube__frame = (_frame_light*)malloc(sizeof(_frame_light) * (BUFFERSIZE+1));
   _cube_buffer = (unsigned char*)malloc(sizeof(unsigned char) * BUFFERSIZE);
   
-  
+  // ONLY NEEDED FOR DEBUGGING
+  // initilize the pins to not carry data over from the last build
+  for (int i = 0; i < 192; i++) {
+    _cube__frame[  i].pin1 = 0; _cube__frame[  i].pin2 = 0;
+  }
+  // END ONLY NEEDED FOR DEBUGGING
+
   for (int i = 0; i < BUFFERSIZE; i++) {
     _cube_buffer[i] = 0;
   }
@@ -125,7 +137,30 @@ void initCube() {
   Timer1_enableOverflowInterrupt();
   Timer1_setMode (TIMER1_NORMAL);
 
+
   // Assign all the pin mappings to the display buffer  
+  
+  // New Method
+  Serial.begin(9600);
+  int i = 0;
+  Serial.println(i);
+  
+  #define DEFINE_LED(c,x,y,z) i=SET_LED(c##x##y##z,i)
+  #define ITERATE_LED_Z_VALUES(c,x,y) DEFINE_LED( c,x,y,1 ); DEFINE_LED( c,x,y,2 ); DEFINE_LED( c,x,y,3 ); DEFINE_LED( c,x,y,4 )
+  #define ITERATE_LED_Y_VALUES(c,x)   ITERATE_LED_Z_VALUES(c,x,1); ITERATE_LED_Z_VALUES(c,x,2); ITERATE_LED_Z_VALUES(c,x,3); ITERATE_LED_Z_VALUES(c,x,4)
+  #define ITERATE_LED_X_VALUES(c)     ITERATE_LED_Y_VALUES(c,1);   ITERATE_LED_Y_VALUES(c,2);   ITERATE_LED_Y_VALUES(c,3); ITERATE_LED_Y_VALUES(c,4);
+  #define ITERATE_LED_COLORS()        ITERATE_LED_X_VALUES(b);  Serial.println(i);   ITERATE_LED_X_VALUES(g);     ITERATE_LED_X_VALUES(r);
+  #define MAP_LEDS ITERATE_LED_COLORS();
+  MAP_LEDS;
+  
+  Serial.print("|");
+  Serial.println(i);
+  Serial.end();
+  
+  SET_LED(4, 8, 0);
+  SET_LED(16, 4, 1);
+  // Old Method
+  /*
   _cube__frame[  0].pin1 =  4; _cube__frame[  0].pin2 =  8;
   _cube__frame[  1].pin1 = 16; _cube__frame[  1].pin2 =  4;
   _cube__frame[  2].pin1 = 12; _cube__frame[  2].pin2 = 16;
@@ -318,7 +353,7 @@ void initCube() {
   _cube__frame[189].pin1 =  5; _cube__frame[189].pin2 =  1;
   _cube__frame[190].pin1 =  1; _cube__frame[190].pin2 = 15;
   _cube__frame[191].pin1 = 15; _cube__frame[191].pin2 = 12;
-  
+  /**/
 }
   //////////////////////////////////////////////////////////////////////////////
  ////////////////////////////// HELPER FUNCTIONS //////////////////////////////
