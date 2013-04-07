@@ -151,6 +151,11 @@ void initCube() {
   #define ITERATE_LED_COLORS() ITERATE_LED_X_VALUES(b); Serial.println(i); ITERATE_LED_X_VALUES(g); ITERATE_LED_X_VALUES(r);
   #define MAP_LEDS ITERATE_LED_COLORS();
   MAP_LEDS;
+  #undef DEFINE_LED
+  #undef ITERATE_LED_Z_VALUES
+  #undef ITERATE_LED_Y_VALUES
+  #undef ITERATE_LED_X_VALUES
+  #undef ITERATE_LED_COLORS
 }
   //////////////////////////////////////////////////////////////////////////////
  ////////////////////////////// HELPER FUNCTIONS //////////////////////////////
