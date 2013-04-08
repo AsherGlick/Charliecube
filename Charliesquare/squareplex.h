@@ -268,29 +268,6 @@ void drawBox(int color, int startx, int starty, int endx, int endy) {
   drawBox(color,255,startx,starty,endx,endy);
 }
 
-/****************************** DRAW BOX OUTLINE ******************************\
-| This function will draw edges of a defined box but none of the planes        |
-\******************************************************************************/
-void drawBoxOutline(int color, int brightness, int startx, int starty, int startz, int endx, int endy, int endz) {
-  if (startx > endx) swapint(startx,endx);
-  if (starty > endy) swapint(starty,endy);
-  if (startz > endz) swapint(startz,endz);
-  
-  
-  for (int i = startx; i <= endx; i++) {
-    for (int j = starty; j <= endy; j++) {
-      for (int k = startz; k <= endz; k++) {
-        int sum =  (i == startx) + (i == endy) + (j == starty) + (j == endy) + (k == startz) + (k == endz);
-        if (sum >= 2){
-          drawLed(color,brightness,i,j,k);
-        }
-      } 
-    }
-  }
-}
-void drawBoxOutline(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-   drawHollowBox(color,255,startx,starty,startz,endx,endy,endz);
-}
 /******************************* DRAW BOX WALLS *******************************\
 | This function will draw the vertical walls and all four sides of a defined   |
 | box                                                                          |
@@ -298,9 +275,7 @@ void drawBoxOutline(int color, int startx, int starty, int startz, int endx, int
 void drawBoxWalls(int color, int brightness, int startx, int starty, int startz, int endx, int endy, int endz) {
   if (startx > endx) swapint(startx,endx);
   if (starty > endy) swapint(starty,endy);
-  if (startz > endz) swapint(startz,endz);
-  
-  for (int i = startz; i <= endz; i++) {
+
     // draw y walls
     for (int j = starty; j <= endy; j++) {
       drawLed(color,brightness,startx,j,i);
@@ -313,8 +288,8 @@ void drawBoxWalls(int color, int brightness, int startx, int starty, int startz,
     }
   }
 }
-void drawBoxWalls(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-  drawBoxWalls(color,255,startx,starty,startz,endx,endy,endz);
+void drawBoxWalls(int color, int startx, int starty, int endx, int endy) {
+  drawBoxWalls(color,255,startx,starty,endx,endy);
 }
 /********************************** DRAW LINE *********************************\
 | This function will attempt to draw a line between the two points given. Due  |
