@@ -145,8 +145,8 @@ void initCube() {
   // This group of macros goes through all of the mappings in mappings.h and sets them to their pin memory slots
   int i = 0;
   #define DEFINE_LED(c,x,y) i=SET_LED(c##x##y,i)
-  #define ITERATE_LED_Y_VALUES(c,x) DEFINE_LED(c,x,1); DEFINE_LED(c,x,2); DEFINE_LED(c,x,3); DEFINE_LED(c,x,4); DEFINE_LED(c,x,5); DEFINE_LED(c,x,6); DEFINE_LED(c,x,7);
-  #define ITERATE_LED_X_VALUES(c) ITERATE_LED_Y_VALUES(c,1); ITERATE_LED_Y_VALUES(c,2);   ITERATE_LED_Y_VALUES(c,3); ITERATE_LED_Y_VALUES(c,4); ITERATE_LED_Y_VALUES(c,4); ITERATE_LED_Y_VALUES(c,6); ITERATE_LED_Y_VALUES(c,7);
+  #define ITERATE_LED_Y_VALUES(c,x) DEFINE_LED(c,x,1); DEFINE_LED(c,x,2); DEFINE_LED(c,x,3); DEFINE_LED(c,x,4); DEFINE_LED(c,x,5); DEFINE_LED(c,x,6); DEFINE_LED(c,x,7); DEFINE_LED(c,x,8);
+  #define ITERATE_LED_X_VALUES(c) ITERATE_LED_Y_VALUES(c,1); ITERATE_LED_Y_VALUES(c,2);   ITERATE_LED_Y_VALUES(c,3); ITERATE_LED_Y_VALUES(c,4); ITERATE_LED_Y_VALUES(c,5); ITERATE_LED_Y_VALUES(c,6); ITERATE_LED_Y_VALUES(c,7); ITERATE_LED_Y_VALUES(c,8);
   #define ITERATE_LED_COLORS() ITERATE_LED_X_VALUES(b); Serial.println(i); ITERATE_LED_X_VALUES(g); ITERATE_LED_X_VALUES(r);
   #define MAP_LEDS ITERATE_LED_COLORS();
   MAP_LEDS;
@@ -272,21 +272,20 @@ void drawBox(int color, int startx, int starty, int endx, int endy) {
 | This function will draw the vertical walls and all four sides of a defined   |
 | box                                                                          |
 \******************************************************************************/
-void drawBoxWalls(int color, int brightness, int startx, int starty, int startz, int endx, int endy, int endz) {
+void drawBoxWalls(int color, int brightness, int startx, int starty, int endx, int endy) {
   if (startx > endx) swapint(startx,endx);
   if (starty > endy) swapint(starty,endy);
 
     // draw y walls
     for (int j = starty; j <= endy; j++) {
-      drawLed(color,brightness,startx,j,i);
-      drawLed(color,brightness,endx,j,i);
+      drawLed(color,brightness,startx,j);
+      drawLed(color,brightness,endx,j);
     }
     // draw x walls
     for (int j = startx+1; j <= endx-1; j++) {
-      drawLed(color,brightness,j,starty,i);
-      drawLed(color,brightness,j,endy,i);
+      drawLed(color,brightness,j,starty);
+      drawLed(color,brightness,j,endy);
     }
-  }
 }
 void drawBoxWalls(int color, int startx, int starty, int endx, int endy) {
   drawBoxWalls(color,255,startx,starty,endx,endy);
