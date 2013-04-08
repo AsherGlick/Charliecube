@@ -254,21 +254,18 @@ void drawLed(int color, int x, int y) {
 /********************************** DRAW BOX **********************************\
 | This function will draw a filled in box of the specified color on the cube   |
 \******************************************************************************/
-void drawBox(int color, int brightness, int startx, int starty, int startz, int endx, int endy, int endz) {
+void drawBox(int color, int brightness, int startx, int starty, int endx, int endy) {
   if (startx > endx) swapint(startx,endx);
   if (starty > endy) swapint(starty,endy);
-  if (startz > endz) swapint(startz,endz);
   
   for (int i = startx; i <= endx; i++) {
     for (int j = starty; j <= endy; j++) {
-      for (int k = startz; k <= endz; k++) {
-        drawLed(color,brightness,i,j,k);
-      }
+      drawLed(color,brightness,i,j);
     } 
   }
 }
-void drawBox(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-  drawBox(color,255,startx,starty,startz,endx,endy,endz);
+void drawBox(int color, int startx, int starty, int endx, int endy) {
+  drawBox(color,255,startx,starty,endx,endy);
 }
 /******************************* DRAW HOLLOW BOX ******************************\
 | This function will draw the walls, ceiling, and floor of a defined box       |
