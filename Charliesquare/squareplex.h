@@ -144,15 +144,13 @@ void initCube() {
   // Assign all the pin mappings to the display buffer  
   // This group of macros goes through all of the mappings in mappings.h and sets them to their pin memory slots
   int i = 0;
-  #define DEFINE_LED(c,x,y,z) i=SET_LED(c##x##y##z,i)
-  #define ITERATE_LED_Z_VALUES(c,x,y) DEFINE_LED( c,x,y,1 ); DEFINE_LED( c,x,y,2 ); DEFINE_LED( c,x,y,3 ); DEFINE_LED( c,x,y,4 )
-  #define ITERATE_LED_Y_VALUES(c,x) ITERATE_LED_Z_VALUES(c,x,1); ITERATE_LED_Z_VALUES(c,x,2); ITERATE_LED_Z_VALUES(c,x,3); ITERATE_LED_Z_VALUES(c,x,4)
-  #define ITERATE_LED_X_VALUES(c) ITERATE_LED_Y_VALUES(c,1); ITERATE_LED_Y_VALUES(c,2);   ITERATE_LED_Y_VALUES(c,3); ITERATE_LED_Y_VALUES(c,4);
+  #define DEFINE_LED(c,x,y) i=SET_LED(c##x##y,i)
+  #define ITERATE_LED_Y_VALUES(c,x) DEFINE_LED(c,x,1); DEFINE_LED(c,x,2); DEFINE_LED(c,x,3); DEFINE_LED(c,x,4); DEFINE_LED(c,x,5); DEFINE_LED(c,x,6); DEFINE_LED(c,x,7);
+  #define ITERATE_LED_X_VALUES(c) ITERATE_LED_Y_VALUES(c,1); ITERATE_LED_Y_VALUES(c,2);   ITERATE_LED_Y_VALUES(c,3); ITERATE_LED_Y_VALUES(c,4); ITERATE_LED_Y_VALUES(c,4); ITERATE_LED_Y_VALUES(c,6); ITERATE_LED_Y_VALUES(c,7);
   #define ITERATE_LED_COLORS() ITERATE_LED_X_VALUES(b); Serial.println(i); ITERATE_LED_X_VALUES(g); ITERATE_LED_X_VALUES(r);
   #define MAP_LEDS ITERATE_LED_COLORS();
   MAP_LEDS;
   #undef DEFINE_LED
-  #undef ITERATE_LED_Z_VALUES
   #undef ITERATE_LED_Y_VALUES
   #undef ITERATE_LED_X_VALUES
   #undef ITERATE_LED_COLORS
@@ -228,29 +226,29 @@ int roundClostest(int numerator, int denominator) {
 | This function turns on LEDs at a specified position. Depending on which      |
 | color this function turns on different colors of the LED                     |
 \******************************************************************************/
-void drawLed(int color, int brightness, int x, int y, int z) {
+void drawLed(int color, int brightness, int x, int y) {
   
   if ((color/3)==0) { // single color (red green blue)
-    charliecubeBackgroundBuffer[(((color)%3)*64)+(x*16)+(y*4)+z] += brightness;
+    charliecubeBackgroundBuffer[(((color)%3)*64)+(x*8)+y] += brightness;
     //charliecubeBackgroundBuffer[(((color+1)%3)*64)+(x*16)+(y*4)+z] += 0;
   }
   else if ((color/3)==1) { // double color (teal yellow purple)
-    charliecubeBackgroundBuffer[(((color)%3)*64)+(x*16)+(y*4)+z] += brightness;
-    charliecubeBackgroundBuffer[(((color+1)%3)*64)+(x*16)+(y*4)+z] += brightness;
+    charliecubeBackgroundBuffer[(((color)%3)*64)+(x*8)+y] += brightness;
+    charliecubeBackgroundBuffer[(((color+1)%3)*64)+(x*8)+y] += brightness;
   }
   else if (color == 6){ // all colors (white)
-    charliecubeBackgroundBuffer[((0)*64)+(x*16)+(y*4)+z] += brightness;
-    charliecubeBackgroundBuffer[((1)*64)+(x*16)+(y*4)+z] += brightness;
-    charliecubeBackgroundBuffer[((2)*64)+(x*16)+(y*4)+z] += brightness;
+    charliecubeBackgroundBuffer[((0)*64)+(x*8)+y] += brightness;
+    charliecubeBackgroundBuffer[((1)*64)+(x*8)+y] += brightness;
+    charliecubeBackgroundBuffer[((2)*64)+(x*8)+y] += brightness;
   }
   else if (color == -7) {
-    charliecubeBackgroundBuffer[((0)*64)+(x*16)+(y*4)+z] = 0;
-    charliecubeBackgroundBuffer[((1)*64)+(x*16)+(y*4)+z] = 0;
-    charliecubeBackgroundBuffer[((2)*64)+(x*16)+(y*4)+z] = 0;
+    charliecubeBackgroundBuffer[((0)*64)+(x*8)+y] = 0;
+    charliecubeBackgroundBuffer[((1)*64)+(x*8)+y] = 0;
+    charliecubeBackgroundBuffer[((2)*64)+(x*8)+y] = 0;
   }
 }
-void drawLed(int color, int x, int y, int z) {
-  drawLed(color,255,x,y,z);
+void drawLed(int color, int x, int y) {
+  drawLed(color,255,x,y);
 }
 
 /********************************** DRAW BOX **********************************\
