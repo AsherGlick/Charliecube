@@ -296,19 +296,16 @@ void drawBoxWalls(int color, int startx, int starty, int endx, int endy) {
 | to the limited availability of pixels the best approximation is chosen for   |
 | each pixel value                                                             |
 \******************************************************************************/
-void drawLine(int color, int brightness, int startx, int starty, int startz, int endx, int endy, int endz) {
+void drawLine(int color, int brightness, int startx, int starty,  int endx, int endy) {
   bool reverseX = false;
   bool reverseY = false;
-  bool reverseZ = false;
   if (startx > endx) {swapint(startx,endx);reverseX=true;}
   if (starty > endy) {swapint(starty,endy);reverseY=true;}
-  if (startz > endz) {swapint(startz,endz);reverseZ=true;}
 
   int delx = endx - startx;
   int dely = endy - starty;
-  int delz = endz - startz;
   
-  int longest = (delx>dely?delx>delz?delx:delz>dely?delz:dely:dely>delz?dely:delz>delx?delz:delx);
+  int longest = delx>dely?delx:dely;
   for (int i = 0; i < longest; i++) {
     int xpos;
     if (reverseX) xpos = roundClostest(((longest-i)*delx),longest) + startx;
@@ -318,20 +315,15 @@ void drawLine(int color, int brightness, int startx, int starty, int startz, int
     if (reverseY) ypos = roundClostest(((longest-i)*dely),longest) + starty;
     else ypos = roundClostest((i*dely),longest) + starty;
     
-    int zpos;
-    if (reverseZ) zpos = roundClostest(((longest-i)*delz),longest) + startz;
-    else zpos = roundClostest((i*delz),longest) + startz;
-    
-    drawLed(color,brightness,xpos,ypos,zpos);
+    drawLed(color,brightness,xpos,ypos);
   }
   
   if (reverseX) swapint(startx,endx);
   if (reverseY) swapint(starty,endy);
-  if (reverseZ) swapint(startz,endz);
-  drawLed(color,brightness,endx,endy,endz);
+  drawLed(color,brightness,endx,endy);
 }
-void drawLine(int color, int startx, int starty, int startz, int endx, int endy, int endz) {
-  drawLine(color,255,startx, starty, startz, endx, endy, endz);
+void drawLine(int color, int startx, int starty, int endx, int endy) {
+  drawLine(color,255,startx, starty, endx, endy);
 }
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////////// DISPLAY //////////////////////////////////
