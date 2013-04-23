@@ -66,8 +66,6 @@ struct charliecubeForegroundLed{
   unsigned char next;
 };
 
-void testLED();
-
 charliecubeForegroundLed * charliecubeForegroundBuffer;  // foreground buffer
                               // background buffer
 
@@ -126,7 +124,7 @@ void initCube() {
   #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega2560__)
     // If the arduino is a 328 chip use Timer2
     Timer2_setPrescaler(256);
-    //Timer2_enableOverflowInterrupt();
+    Timer2_enableOverflowInterrupt();
     Timer2_setMode (TIMER2_NORMAL);
   #elif defined(__AVR_ATmega32U4__)
     // If the arduino is a 32U4 chip use Timer3
@@ -607,19 +605,19 @@ int animationMax = 0;
 #elif defined(__AVR_ATmega32U4__)
   #define TIMER_INTERRUPT_VECTOR TIMER3_OVF_vect
 #elif defined(__AVR_ATmega2560__)
-  #define TIMER_INTERRUPT_VECTOR_TIMER2_OVF_vect
+  #define TIMER_INTERRUPT_VECTOR TIMER2_OVF_vect
 #endif
 // The advance animation interrupt
 ISR(TIMER_INTERRUPT_VECTOR) {
   animationTimer++;
-  if (animationTimer == animationMax) {
+  if (animationTimer >= animationMax) {
     continuePattern = false;
     animationTimer=0;
   }  
 }
 
 void setAnimationTime(unsigned int maxValue) {
-  #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega2560)
+  #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega2560__)
     animationMax = maxValue; // prescaler 255 on a 8 bit timer
   #elif defined(__AVR_ATmega32U4__)
     animationMax = maxValue/256; // prescaler 255 on a 16 bit timer
@@ -627,33 +625,5 @@ void setAnimationTime(unsigned int maxValue) {
   
 }
 
-
-void testLED() {
-  DDRA = pinsA[4] | pinsA[8];
-  DDRB = pinsB[4] | pinsB[8];
-  DDRC = pinsC[4] | pinsC[8];
-  DDRD = pinsD[4] | pinsD[8];
-  DDRE = pinsE[4] | pinsE[8];
-  DDRF = pinsF[4] | pinsF[8];
-  DDRG = pinsG[4] | pinsG[8];
-  DDRH = pinsH[4] | pinsH[8];
-  DDRJ = pinsJ[4] | pinsJ[8];
-  DDRK = pinsK[4] | pinsK[8];
-  DDRL = pinsL[4] | pinsL[8];
-  
-  PORTA = pinsA[4];
-  PORTB = pinsB[4];
-  PORTC = pinsC[4];
-  PORTD = pinsD[4];
-  PORTE = pinsE[4];
-  PORTF = pinsF[4];
-  PORTG = pinsG[4];
-  PORTH = pinsH[4];
-  PORTJ = pinsJ[4];
-  PORTK = pinsK[4];
-  PORTL = pinsL[4];
-  
-  while(true);
-}
 
 #endif
