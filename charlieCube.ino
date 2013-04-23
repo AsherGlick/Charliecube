@@ -63,7 +63,7 @@ void loop() {
   trifade();
   shiftSquares();
   tunnel();
-  chaseTheDot();
+  //chaseTheDot();
   planarFlop3D();
   
 }
