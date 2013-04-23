@@ -66,7 +66,7 @@ struct charliecubeForegroundLed{
   unsigned char next;
 };
 
-
+void testLED();
 
 charliecubeForegroundLed * charliecubeForegroundBuffer;  // foreground buffer
                               // background buffer
@@ -123,10 +123,10 @@ void initCube() {
   //END DEBUG
   
   // Configure Interrupt for Animation Progression
-  #if defined(__AVR_ATmega328P__)
+  #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega2560__)
     // If the arduino is a 328 chip use Timer2
     Timer2_setPrescaler(256);
-    Timer2_enableOverflowInterrupt();
+    //Timer2_enableOverflowInterrupt();
     Timer2_setMode (TIMER2_NORMAL);
   #elif defined(__AVR_ATmega32U4__)
     // If the arduino is a 32U4 chip use Timer3
@@ -156,6 +156,11 @@ void initCube() {
   #undef ITERATE_LED_Y_VALUES
   #undef ITERATE_LED_X_VALUES
   #undef ITERATE_LED_COLORS
+  
+  
+  //testLED();
+
+  
 }
   //////////////////////////////////////////////////////////////////////////////
  ////////////////////////////// HELPER FUNCTIONS //////////////////////////////
@@ -479,6 +484,21 @@ byte pinsF[] = {0x00,WIRE_1_PORT_F,WIRE_2_PORT_F,WIRE_3_PORT_F,WIRE_4_PORT_F,
                 WIRE_13_PORT_F,WIRE_14_PORT_F,WIRE_15_PORT_F,WIRE_16_PORT_F};
 #endif
 
+#ifdef __AVR_ATmega2560__ // Arduino Mega
+byte pinsA[] = {0x00,WIRE_1_PORT_A,WIRE_2_PORT_A,WIRE_3_PORT_A,WIRE_4_PORT_A,WIRE_5_PORT_A,WIRE_6_PORT_A,WIRE_7_PORT_A,WIRE_8_PORT_A,WIRE_9_PORT_A,WIRE_10_PORT_A,WIRE_11_PORT_A,WIRE_12_PORT_A,WIRE_13_PORT_A,WIRE_14_PORT_A,WIRE_15_PORT_A,WIRE_16_PORT_A};
+byte pinsB[] = {0x00,WIRE_1_PORT_B,WIRE_2_PORT_B,WIRE_3_PORT_B,WIRE_4_PORT_B,WIRE_5_PORT_B,WIRE_6_PORT_B,WIRE_7_PORT_B,WIRE_8_PORT_B,WIRE_9_PORT_B,WIRE_10_PORT_B,WIRE_11_PORT_B,WIRE_12_PORT_B,WIRE_13_PORT_B,WIRE_14_PORT_B,WIRE_15_PORT_B,WIRE_16_PORT_B};
+byte pinsC[] = {0x00,WIRE_1_PORT_C,WIRE_2_PORT_C,WIRE_3_PORT_C,WIRE_4_PORT_C,WIRE_5_PORT_C,WIRE_6_PORT_C,WIRE_7_PORT_C,WIRE_8_PORT_C,WIRE_9_PORT_C,WIRE_10_PORT_C,WIRE_11_PORT_C,WIRE_12_PORT_C,WIRE_13_PORT_C,WIRE_14_PORT_C,WIRE_15_PORT_C,WIRE_16_PORT_C};
+byte pinsD[] = {0x00,WIRE_1_PORT_D,WIRE_2_PORT_D,WIRE_3_PORT_D,WIRE_4_PORT_D,WIRE_5_PORT_D,WIRE_6_PORT_D,WIRE_7_PORT_D,WIRE_8_PORT_D,WIRE_9_PORT_D,WIRE_10_PORT_D,WIRE_11_PORT_D,WIRE_12_PORT_D,WIRE_13_PORT_D,WIRE_14_PORT_D,WIRE_15_PORT_D,WIRE_16_PORT_D};
+byte pinsE[] = {0x00,WIRE_1_PORT_E,WIRE_2_PORT_E,WIRE_3_PORT_E,WIRE_4_PORT_E,WIRE_5_PORT_E,WIRE_6_PORT_E,WIRE_7_PORT_E,WIRE_8_PORT_E,WIRE_9_PORT_E,WIRE_10_PORT_E,WIRE_11_PORT_E,WIRE_12_PORT_E,WIRE_13_PORT_E,WIRE_14_PORT_E,WIRE_15_PORT_E,WIRE_16_PORT_E};
+byte pinsF[] = {0x00,WIRE_1_PORT_F,WIRE_2_PORT_F,WIRE_3_PORT_F,WIRE_4_PORT_F,WIRE_5_PORT_F,WIRE_6_PORT_F,WIRE_7_PORT_F,WIRE_8_PORT_F,WIRE_9_PORT_F,WIRE_10_PORT_F,WIRE_11_PORT_F,WIRE_12_PORT_F,WIRE_13_PORT_F,WIRE_14_PORT_F,WIRE_15_PORT_F,WIRE_16_PORT_F};
+byte pinsG[] = {0x00,WIRE_1_PORT_G,WIRE_2_PORT_G,WIRE_3_PORT_G,WIRE_4_PORT_G,WIRE_5_PORT_G,WIRE_6_PORT_G,WIRE_7_PORT_G,WIRE_8_PORT_G,WIRE_9_PORT_G,WIRE_10_PORT_G,WIRE_11_PORT_G,WIRE_12_PORT_G,WIRE_13_PORT_G,WIRE_14_PORT_G,WIRE_15_PORT_G,WIRE_16_PORT_G};
+byte pinsH[] = {0x00,WIRE_1_PORT_H,WIRE_2_PORT_H,WIRE_3_PORT_H,WIRE_4_PORT_H,WIRE_5_PORT_H,WIRE_6_PORT_H,WIRE_7_PORT_H,WIRE_8_PORT_H,WIRE_9_PORT_H,WIRE_10_PORT_H,WIRE_11_PORT_H,WIRE_12_PORT_H,WIRE_13_PORT_H,WIRE_14_PORT_H,WIRE_15_PORT_H,WIRE_16_PORT_H};
+byte pinsJ[] = {0x00,WIRE_1_PORT_J,WIRE_2_PORT_J,WIRE_3_PORT_J,WIRE_4_PORT_J,WIRE_5_PORT_J,WIRE_6_PORT_J,WIRE_7_PORT_J,WIRE_8_PORT_J,WIRE_9_PORT_J,WIRE_10_PORT_J,WIRE_11_PORT_J,WIRE_12_PORT_J,WIRE_13_PORT_J,WIRE_14_PORT_J,WIRE_15_PORT_J,WIRE_16_PORT_J};
+byte pinsK[] = {0x00,WIRE_1_PORT_K,WIRE_2_PORT_K,WIRE_3_PORT_K,WIRE_4_PORT_K,WIRE_5_PORT_K,WIRE_6_PORT_K,WIRE_7_PORT_K,WIRE_8_PORT_K,WIRE_9_PORT_K,WIRE_10_PORT_K,WIRE_11_PORT_K,WIRE_12_PORT_K,WIRE_13_PORT_K,WIRE_14_PORT_K,WIRE_15_PORT_K,WIRE_16_PORT_K};
+byte pinsL[] = {0x00,WIRE_1_PORT_L,WIRE_2_PORT_L,WIRE_3_PORT_L,WIRE_4_PORT_L,WIRE_5_PORT_L,WIRE_6_PORT_L,WIRE_7_PORT_L,WIRE_8_PORT_L,WIRE_9_PORT_L,WIRE_10_PORT_L,WIRE_11_PORT_L,WIRE_12_PORT_L,WIRE_13_PORT_L,WIRE_14_PORT_L,WIRE_15_PORT_L,WIRE_16_PORT_L};
+#endif
+
+
 ISR(TIMER1_OVF_vect) {
   #ifdef __AVR_ATmega328P__ // Arduino Duemilinova / Uno
   PORTB = 0x00;
@@ -492,6 +512,19 @@ ISR(TIMER1_OVF_vect) {
   PORTE = 0x00;
   PORTF = 0x00;
   #endif 
+  #ifdef __AVR_ATmega2560__
+  PORTA = 0x00;
+  PORTB = 0x00;
+  PORTC = 0x00;
+  PORTD = 0x00;
+  PORTE = 0x00;
+  PORTF = 0x00;
+  PORTG = 0x00;
+  PORTH = 0x00;
+  PORTJ = 0x00;
+  PORTK = 0x00;
+  PORTL = 0x00;
+  #endif
   
   int pin1 = charliecubeCurrentLED->pin1;
   int pin2 = charliecubeCurrentLED->pin2;
@@ -522,9 +555,47 @@ ISR(TIMER1_OVF_vect) {
   PORTE = pinsE[pin1];
   PORTF = pinsF[pin1];
   #endif
+  
+  #ifdef __AVR_ATmega2560__
+  DDRA = pinsA[pin1] | pinsA[pin2];
+  DDRB = pinsB[pin1] | pinsB[pin2];
+  DDRC = pinsC[pin1] | pinsC[pin2];
+  DDRD = pinsD[pin1] | pinsD[pin2];
+  DDRE = pinsE[pin1] | pinsE[pin2];
+  DDRF = pinsF[pin1] | pinsF[pin2];
+  DDRG = pinsG[pin1] | pinsG[pin2];
+  DDRH = pinsH[pin1] | pinsH[pin2];
+  DDRJ = pinsJ[pin1] | pinsJ[pin2];
+  DDRK = pinsK[pin1] | pinsK[pin2];
+  DDRL = pinsL[pin1] | pinsL[pin2];
+  
+  PORTA = pinsA[pin1];
+  PORTB = pinsB[pin1];
+  PORTC = pinsC[pin1];
+  PORTD = pinsD[pin1];
+  PORTE = pinsE[pin1];
+  PORTF = pinsF[pin1];
+  PORTG = pinsG[pin1];
+  PORTH = pinsH[pin1];
+  PORTJ = pinsJ[pin1];
+  PORTK = pinsK[pin1];
+  PORTL = pinsL[pin1];
+  
+  
+  /*
+  for (int i = 0; i < 16; i++) {
+    pinMode(pins[i], INPUT);
+  }
+      pinMode(pins[pin1],OUTPUT);
+      pinMode(pins[pin2],OUTPUT);
+      digitalWrite(pins[pin1],HIGH);
+      digitalWrite(pins[pin2],LOW);*/
+  
+  #endif
 
   Timer1_setValue(0xFFFF - brightness);
 }
+
 
 
 // Allocate the current time and the maximum time variables
@@ -535,6 +606,8 @@ int animationMax = 0;
   #define TIMER_INTERRUPT_VECTOR TIMER2_OVF_vect
 #elif defined(__AVR_ATmega32U4__)
   #define TIMER_INTERRUPT_VECTOR TIMER3_OVF_vect
+#elif defined(__AVR_ATmega2560__)
+  #define TIMER_INTERRUPT_VECTOR_TIMER2_OVF_vect
 #endif
 // The advance animation interrupt
 ISR(TIMER_INTERRUPT_VECTOR) {
@@ -546,11 +619,41 @@ ISR(TIMER_INTERRUPT_VECTOR) {
 }
 
 void setAnimationTime(unsigned int maxValue) {
-  #if defined(__AVR_ATmega328P__)
+  #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega2560)
     animationMax = maxValue; // prescaler 255 on a 8 bit timer
   #elif defined(__AVR_ATmega32U4__)
     animationMax = maxValue/256; // prescaler 255 on a 16 bit timer
   #endif
   
 }
+
+
+void testLED() {
+  DDRA = pinsA[4] | pinsA[8];
+  DDRB = pinsB[4] | pinsB[8];
+  DDRC = pinsC[4] | pinsC[8];
+  DDRD = pinsD[4] | pinsD[8];
+  DDRE = pinsE[4] | pinsE[8];
+  DDRF = pinsF[4] | pinsF[8];
+  DDRG = pinsG[4] | pinsG[8];
+  DDRH = pinsH[4] | pinsH[8];
+  DDRJ = pinsJ[4] | pinsJ[8];
+  DDRK = pinsK[4] | pinsK[8];
+  DDRL = pinsL[4] | pinsL[8];
+  
+  PORTA = pinsA[4];
+  PORTB = pinsB[4];
+  PORTC = pinsC[4];
+  PORTD = pinsD[4];
+  PORTE = pinsE[4];
+  PORTF = pinsF[4];
+  PORTG = pinsG[4];
+  PORTH = pinsH[4];
+  PORTJ = pinsJ[4];
+  PORTK = pinsK[4];
+  PORTL = pinsL[4];
+  
+  while(true);
+}
+
 #endif

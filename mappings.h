@@ -233,6 +233,202 @@ __AVR_ATmega32U4__
 
   #endif // END __AVR_ATmega32U4__
 
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+	#define WIRE_1_PORT_A 0x00
+	#define WIRE_1_PORT_B 0x00
+	#define WIRE_1_PORT_C 0x00
+	#define WIRE_1_PORT_D 0x00
+	#define WIRE_1_PORT_E 0x10 // Digital 2 PE4
+	#define WIRE_1_PORT_F 0x00
+	#define WIRE_1_PORT_G 0x00
+	#define WIRE_1_PORT_H 0x00
+	#define WIRE_1_PORT_J 0x00
+	#define WIRE_1_PORT_K 0x00
+	#define WIRE_1_PORT_L 0x00
+
+	#define WIRE_2_PORT_A 0x00 // Digital 3 PE5
+	#define WIRE_2_PORT_B 0x00
+	#define WIRE_2_PORT_C 0x00
+	#define WIRE_2_PORT_D 0x00
+	#define WIRE_2_PORT_E 0x20
+	#define WIRE_2_PORT_F 0x00
+	#define WIRE_2_PORT_G 0x00
+	#define WIRE_2_PORT_H 0x00
+	#define WIRE_2_PORT_J 0x00
+	#define WIRE_2_PORT_K 0x00
+	#define WIRE_2_PORT_L 0x00
+
+	#define WIRE_3_PORT_A 0x00 // Digital 4 PG5
+	#define WIRE_3_PORT_B 0x00
+	#define WIRE_3_PORT_C 0x00
+	#define WIRE_3_PORT_D 0x00
+	#define WIRE_3_PORT_E 0x00
+	#define WIRE_3_PORT_F 0x00
+	#define WIRE_3_PORT_G 0x20
+	#define WIRE_3_PORT_H 0x00
+	#define WIRE_3_PORT_J 0x00
+	#define WIRE_3_PORT_K 0x00
+	#define WIRE_3_PORT_L 0x00
+
+	#define WIRE_4_PORT_A 0x00 // Digital 5 PE3
+	#define WIRE_4_PORT_B 0x00
+	#define WIRE_4_PORT_C 0x00
+	#define WIRE_4_PORT_D 0x00
+	#define WIRE_4_PORT_E 0x08
+	#define WIRE_4_PORT_F 0x00
+	#define WIRE_4_PORT_G 0x00
+	#define WIRE_4_PORT_H 0x00
+	#define WIRE_4_PORT_J 0x00
+	#define WIRE_4_PORT_K 0x00
+	#define WIRE_4_PORT_L 0x00
+
+	#define WIRE_5_PORT_A 0x00 // Digital 6 PH3
+	#define WIRE_5_PORT_B 0x00
+	#define WIRE_5_PORT_C 0x00
+	#define WIRE_5_PORT_D 0x00
+	#define WIRE_5_PORT_E 0x00
+	#define WIRE_5_PORT_F 0x00
+	#define WIRE_5_PORT_G 0x00
+	#define WIRE_5_PORT_H 0x08
+	#define WIRE_5_PORT_J 0x00
+	#define WIRE_5_PORT_K 0x00
+	#define WIRE_5_PORT_L 0x00
+
+	#define WIRE_6_PORT_A 0x00 // Digital 7 PH4
+	#define WIRE_6_PORT_B 0x00
+	#define WIRE_6_PORT_C 0x00
+	#define WIRE_6_PORT_D 0x00
+	#define WIRE_6_PORT_E 0x00
+	#define WIRE_6_PORT_F 0x00
+	#define WIRE_6_PORT_G 0x00
+	#define WIRE_6_PORT_H 0x10
+	#define WIRE_6_PORT_J 0x00
+	#define WIRE_6_PORT_K 0x00
+	#define WIRE_6_PORT_L 0x00
+
+	#define WIRE_7_PORT_A 0x00 // Digital 8 PH5
+	#define WIRE_7_PORT_B 0x00
+	#define WIRE_7_PORT_C 0x00
+	#define WIRE_7_PORT_D 0x00
+	#define WIRE_7_PORT_E 0x00
+	#define WIRE_7_PORT_F 0x00
+	#define WIRE_7_PORT_G 0x00
+	#define WIRE_7_PORT_H 0x20
+	#define WIRE_7_PORT_J 0x00
+	#define WIRE_7_PORT_K 0x00
+	#define WIRE_7_PORT_L 0x00
+
+	#define WIRE_8_PORT_A 0x00 // Digital 9 PH6
+	#define WIRE_8_PORT_B 0x00
+	#define WIRE_8_PORT_C 0x00
+	#define WIRE_8_PORT_D 0x00
+	#define WIRE_8_PORT_E 0x00
+	#define WIRE_8_PORT_F 0x00
+	#define WIRE_8_PORT_G 0x00
+	#define WIRE_8_PORT_H 0x40
+	#define WIRE_8_PORT_J 0x00
+	#define WIRE_8_PORT_K 0x00
+	#define WIRE_8_PORT_L 0x00
+
+	#define WIRE_9_PORT_A 0x00 // Digital 10 PB4
+	#define WIRE_9_PORT_B 0x10
+	#define WIRE_9_PORT_C 0x00
+	#define WIRE_9_PORT_D 0x00
+	#define WIRE_9_PORT_E 0x00
+	#define WIRE_9_PORT_F 0x00
+	#define WIRE_9_PORT_G 0x00
+	#define WIRE_9_PORT_H 0x00
+	#define WIRE_9_PORT_J 0x00
+	#define WIRE_9_PORT_K 0x00
+	#define WIRE_9_PORT_L 0x00
+
+	#define WIRE_10_PORT_A 0x00 // Digital 11 PB5
+	#define WIRE_10_PORT_B 0x20
+	#define WIRE_10_PORT_C 0x00
+	#define WIRE_10_PORT_D 0x00
+	#define WIRE_10_PORT_E 0x00
+	#define WIRE_10_PORT_F 0x00
+	#define WIRE_10_PORT_G 0x00
+	#define WIRE_10_PORT_H 0x00
+	#define WIRE_10_PORT_J 0x00
+	#define WIRE_10_PORT_K 0x00
+	#define WIRE_10_PORT_L 0x00
+
+	#define WIRE_11_PORT_A 0x00 // Digital 12 PB6
+	#define WIRE_11_PORT_B 0x40
+	#define WIRE_11_PORT_C 0x00
+	#define WIRE_11_PORT_D 0x00
+	#define WIRE_11_PORT_E 0x00
+	#define WIRE_11_PORT_F 0x00
+	#define WIRE_11_PORT_G 0x00
+	#define WIRE_11_PORT_H 0x00
+	#define WIRE_11_PORT_J 0x00
+	#define WIRE_11_PORT_K 0x00
+	#define WIRE_11_PORT_L 0x00
+
+	#define WIRE_12_PORT_A 0x00 // Digital 13 PB7
+	#define WIRE_12_PORT_B 0x80
+	#define WIRE_12_PORT_C 0x00
+	#define WIRE_12_PORT_D 0x00
+	#define WIRE_12_PORT_E 0x00
+	#define WIRE_12_PORT_F 0x00
+	#define WIRE_12_PORT_G 0x00
+	#define WIRE_12_PORT_H 0x00
+	#define WIRE_12_PORT_J 0x00
+	#define WIRE_12_PORT_K 0x00
+	#define WIRE_12_PORT_L 0x00
+
+	#define WIRE_13_PORT_A 0x00 // Analog 1 PF0
+	#define WIRE_13_PORT_B 0x00
+	#define WIRE_13_PORT_C 0x00
+	#define WIRE_13_PORT_D 0x00
+	#define WIRE_13_PORT_E 0x00
+	#define WIRE_13_PORT_F 0x01
+	#define WIRE_13_PORT_G 0x00
+	#define WIRE_13_PORT_H 0x00
+	#define WIRE_13_PORT_J 0x00
+	#define WIRE_13_PORT_K 0x00
+	#define WIRE_13_PORT_L 0x00
+
+	#define WIRE_14_PORT_A 0x00 // Analog 2 PF1
+	#define WIRE_14_PORT_B 0x00
+	#define WIRE_14_PORT_C 0x00
+	#define WIRE_14_PORT_D 0x00
+	#define WIRE_14_PORT_E 0x00
+	#define WIRE_14_PORT_F 0x02
+	#define WIRE_14_PORT_G 0x00
+	#define WIRE_14_PORT_H 0x00
+	#define WIRE_14_PORT_J 0x00
+	#define WIRE_14_PORT_K 0x00
+	#define WIRE_14_PORT_L 0x00
+
+	#define WIRE_15_PORT_A 0x00 // Analog 3 PF2
+	#define WIRE_15_PORT_B 0x00
+	#define WIRE_15_PORT_C 0x00
+	#define WIRE_15_PORT_D 0x00
+	#define WIRE_15_PORT_E 0x00
+	#define WIRE_15_PORT_F 0x04
+	#define WIRE_15_PORT_G 0x00
+	#define WIRE_15_PORT_H 0x00
+	#define WIRE_15_PORT_J 0x00
+	#define WIRE_15_PORT_K 0x00
+	#define WIRE_15_PORT_L 0x00
+
+	#define WIRE_16_PORT_A 0x00 // Analog 4 PF3
+	#define WIRE_16_PORT_B 0x00
+	#define WIRE_16_PORT_C 0x00
+	#define WIRE_16_PORT_D 0x00
+	#define WIRE_16_PORT_E 0x00
+	#define WIRE_16_PORT_F 0x08
+	#define WIRE_16_PORT_G 0x00
+	#define WIRE_16_PORT_H 0x00
+	#define WIRE_16_PORT_J 0x00
+	#define WIRE_16_PORT_K 0x00
+	#define WIRE_16_PORT_L 0x00
+
+#endif // END ARDUINO MEGA PORT MAPPINGS
+
+
 // Color X Y Z
 //      CXYZ 
 #define b111 4,8
