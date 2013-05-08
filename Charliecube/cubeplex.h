@@ -404,7 +404,7 @@ void flushBuffer() {
   // Use this to determine if an led is on and how to handle inserting and deleting elements in the list
   charliecubeForegroundLed * previousActivatedFrame = charliecubeForegroundBuffer+192;
   //offtime = 0; // no longer set offtime to 0, all modifications will be done within the loop
-  
+  int ledCount = 0; // How many leds are on?
   for (int i = 0; i < 192; i++) {
     int newBrightness = charliecubeBackgroundBuffer[i];
     if (previousActivatedFrame->next == i) { // Previously On
@@ -414,6 +414,7 @@ void flushBuffer() {
         offtime -= 255-oldBrightness;// remove the brightness modification from offtime
       }
       else { // Staying On (with possible brightness change)
+        ledCount += 1;
         offtime += oldBrightness - newBrightness;// Change the offtime variable based on the difference in brightnesses
         charliecubeForegroundBuffer[i].brightness = newBrightness;// Change the brightness value
         previousActivatedFrame = charliecubeForegroundBuffer+i; // Set this as the previousActivatedFrame
@@ -422,7 +423,7 @@ void flushBuffer() {
     else { // Previously Off
       if (newBrightness == 0) {} // Staying Off (do nothing)
       else { // Turning On
-        
+        ledCount += 1;
         charliecubeForegroundBuffer[i].next = previousActivatedFrame->next;//Set this's next to the previous's next
         charliecubeForegroundBuffer[i].brightness = newBrightness; // set this brightness to the brightness value
         offtime += 255 - newBrightness;// modify the offtime based on the brightness
@@ -432,7 +433,12 @@ void flushBuffer() {
       
     }
   }
-  charliecubeForegroundBuffer[192].brightness = offtime;
+  if (ledCount == 0) {
+    charliecubeForegroundBuffer[192].brightness = 255;
+  }
+  else {
+    charliecubeForegroundBuffer[192].brightness = offtime;
+  }
 }
 
 
