@@ -107,17 +107,19 @@ void initCube() {
   charliecubeCurrentLED = charliecubeForegroundBuffer+192; 
   charliecubeCurrentLED->pin1 = 0;
   charliecubeCurrentLED->pin2 = 0;
-  charliecubeCurrentLED->next = 190;
+  charliecubeCurrentLED->next = 192;
   charliecubeCurrentLED->brightness=0;
 
   
   //DEBUG STATEMENT
+  /*
   charliecubeCurrentLED = charliecubeForegroundBuffer+191;
   charliecubeCurrentLED->next = 192;
   charliecubeCurrentLED->brightness=255;
   charliecubeCurrentLED = charliecubeForegroundBuffer+190;
   charliecubeCurrentLED->next = 191;
   charliecubeCurrentLED->brightness=255;
+  */
   //END DEBUG
   
   // Configure Interrupt for Animation Progression
