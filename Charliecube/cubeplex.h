@@ -225,7 +225,7 @@ int roundClostest(int numerator, int denominator) {
 #define yellow 4
 #define purple 5
 #define white 6
-#define off -7
+#define off 7
 
 /********************************** DRAW LED **********************************\
 | This function turns on LEDs at a specified position. Depending on which      |
@@ -246,7 +246,7 @@ void drawLed(int color, int brightness, int x, int y, int z) {
     charliecubeBackgroundBuffer[((1)*64)+(x*16)+(y*4)+z] += brightness;
     charliecubeBackgroundBuffer[((2)*64)+(x*16)+(y*4)+z] += brightness;
   }
-  else if (color == -7) {
+  else if (color == 7) {
     charliecubeBackgroundBuffer[((0)*64)+(x*16)+(y*4)+z] = 0;
     charliecubeBackgroundBuffer[((1)*64)+(x*16)+(y*4)+z] = 0;
     charliecubeBackgroundBuffer[((2)*64)+(x*16)+(y*4)+z] = 0;
