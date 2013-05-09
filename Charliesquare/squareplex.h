@@ -110,7 +110,7 @@ void initCube() {
   charliecubeCurrentLED->pin1 = 0;
   charliecubeCurrentLED->pin2 = 0;
   charliecubeCurrentLED->next = 192;
-  charliecubeCurrentLED->brightness=0;
+  charliecubeCurrentLED->brightness=255;
 
   
   //DEBUG STATEMENT
